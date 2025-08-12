@@ -1,0 +1,23 @@
+;
+; © 2024-present https://github.com/cengiz-pz
+;
+
+[config]
+name="@pluginName@"
+binary="@pluginName@.a"
+
+initialization="@iosInitializationMethod@"
+deinitialization="@iosDeinitializationMethod@"
+
+[dependencies]
+linked=[]
+embedded=[]
+system=[]
+
+capabilities=[]
+
+files=[]
+
+linker_flags=[]
+
+[plist]
