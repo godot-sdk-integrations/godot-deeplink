@@ -26,6 +26,7 @@ local.properties
 *.o
 *.dblite
 Pods/
+ios/godot/
 
 # Godot 4+ specific ignores
 demo/.godot/*
