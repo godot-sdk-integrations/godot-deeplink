@@ -2,6 +2,7 @@
 // © 2024-present https://github.com/cengiz-pz
 //
 
+#import "godot_app_delegate.h"
 #import "deeplink_service.h"
 #import "deeplink_plugin_implementation.h"
 #import "gdp_converter.h"
@@ -9,11 +10,7 @@
 
 struct DeeplinkServiceInitializer {
 	DeeplinkServiceInitializer() {
-#if VERSION_MAJOR == 4 && VERSION_MINOR < 4
-		[GodotApplicalitionDelegate addService:[DeeplinkService shared]];
-#else
-		[GodotApplicationDelegate addService:[DeeplinkService shared]];
-#endif
+		[GDTApplicationDelegate addService:[DeeplinkService shared]];
 	}
 };
 static DeeplinkServiceInitializer initializer;
@@ -23,7 +20,6 @@ static DeeplinkServiceInitializer initializer;
 
 - (instancetype) init {
 	self = [super init];
-
 	return self;
 }
 
@@ -40,15 +36,18 @@ static DeeplinkServiceInitializer initializer;
 	DeeplinkPlugin::receivedUrl = url;
 
 	if (url) {
-		NSLog(@"Deeplink plugin: URL received!");
+		// Check if the URL is a custom scheme (not http or https)
+		BOOL isCustomScheme = ![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"];
+		NSLog(@"Deeplink plugin: %@ URL received: %@", isCustomScheme ? @"Custom scheme" : @"Universal Link", url.absoluteString);
+
+		DeeplinkPlugin* plugin = DeeplinkPlugin::get_singleton();
+		if (plugin) {
+			Dictionary urlData = [GDPConverter nsUrlToGodotDictionary:url];
+			plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, urlData);
+		}
 	}
 	else {
 		NSLog(@"Deeplink plugin: URL is empty!");
-	}
-
-	DeeplinkPlugin* plugin = DeeplinkPlugin::get_singleton();
-	if (plugin) {
-		plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, [GDPConverter nsUrlToGodotDictionary:url]);
 	}
 
 	return YES;
@@ -59,11 +58,12 @@ static DeeplinkServiceInitializer initializer;
 		NSURL* url = userActivity.webpageURL;
 		DeeplinkPlugin::receivedUrl = url;
 		
-		NSLog(@"Deeplink plugin: Deeplink received at app resumption!");
+		NSLog(@"Deeplink plugin: Universal Link received at app resumption: %@", url.absoluteString);
 
 		DeeplinkPlugin* plugin = DeeplinkPlugin::get_singleton();
 		if (plugin) {
-			plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, [GDPConverter nsUrlToGodotDictionary:url]);
+			Dictionary urlData = [GDPConverter nsUrlToGodotDictionary:url];
+			plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, urlData);
 		}
 	}
 
@@ -74,12 +74,14 @@ static DeeplinkServiceInitializer initializer;
 	if (launchOptions) {
 		NSURL *url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
 		if (url) {
-			NSLog(@"Deeplink plugin: Deeplink received at startup!");
+			BOOL isCustomScheme = ![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"];
+			NSLog(@"Deeplink plugin: %@ received at startup: %@", isCustomScheme ? @"Custom scheme URL" : @"Universal Link", url.absoluteString);
 			DeeplinkPlugin::receivedUrl = url;
 
 			DeeplinkPlugin* plugin = DeeplinkPlugin::get_singleton();
 			if (plugin) {
-				plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, [GDPConverter nsUrlToGodotDictionary:url]);
+				Dictionary urlData = [GDPConverter nsUrlToGodotDictionary:url];
+				plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, urlData);
 			}
 		}
 		else {
@@ -89,12 +91,14 @@ static DeeplinkServiceInitializer initializer;
 			if (userActivityDict) {
 				url = [userActivityDict objectForKey:UIApplicationLaunchOptionsURLKey];
 				if (url) {
-					NSLog(@"Deeplink plugin: Deeplink received at startup from user activity dictionary!");
+					BOOL isCustomScheme = ![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"];
+					NSLog(@"Deeplink plugin: %@ received at startup from user activity dictionary: %@", isCustomScheme ? @"Custom scheme URL" : @"Universal Link", url.absoluteString);
 					DeeplinkPlugin::receivedUrl = url;
 
 					DeeplinkPlugin* plugin = DeeplinkPlugin::get_singleton();
 					if (plugin) {
-						plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, [GDPConverter nsUrlToGodotDictionary:url]);
+						Dictionary urlData = [GDPConverter nsUrlToGodotDictionary:url];
+						plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, urlData);
 					}
 				}
 				else {
@@ -106,11 +110,12 @@ static DeeplinkServiceInitializer initializer;
 							url = userActivity.webpageURL;
 							DeeplinkPlugin::receivedUrl = url;
 							
-							NSLog(@"Deeplink plugin: Deeplink received at app startup from user activity!");
+							NSLog(@"Deeplink plugin: Universal Link received at app startup from user activity: %@", url.absoluteString);
 
 							DeeplinkPlugin* plugin = DeeplinkPlugin::get_singleton();
 							if (plugin) {
-								plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, [GDPConverter nsUrlToGodotDictionary:url]);
+								Dictionary urlData = [GDPConverter nsUrlToGodotDictionary:url];
+								plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, urlData);
 							}
 						}
 						else {

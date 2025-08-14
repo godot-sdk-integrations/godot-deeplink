@@ -6,11 +6,8 @@
 #define deeplink_plugin_application_delegate_h
 
 #import <UIKit/UIKit.h>
-#import "app_delegate.h"
-#import "godot_app_delegate.h"
-#import "core/version_generated.gen.h"
 
-@interface DeeplinkService : ApplicationDelegateService
+@interface DeeplinkService : UIResponder<UIApplicationDelegate>
 
 + (instancetype) shared;
 

@@ -26,7 +26,7 @@ void DeeplinkPlugin::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_domain_associated"), &DeeplinkPlugin::is_domain_associated);
 	ClassDB::bind_method(D_METHOD("navigate_to_open_by_default_settings"), &DeeplinkPlugin::navigate_to_open_by_default_settings);
 
-	ADD_SIGNAL(MethodInfo(DEEPLINK_RECEIVED_SIGNAL, PropertyInfo(Variant::DICTIONARY, "url_data"), PropertyInfo(Variant::DICTIONARY, "options_data")));
+	ADD_SIGNAL(MethodInfo(DEEPLINK_RECEIVED_SIGNAL, PropertyInfo(Variant::DICTIONARY, "url_data")));
 }
 
 Error DeeplinkPlugin::initialize() {

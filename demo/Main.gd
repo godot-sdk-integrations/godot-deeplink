@@ -7,9 +7,20 @@ extends Node
 @onready var deeplink: Deeplink = $Deeplink as Deeplink
 @onready var _label: RichTextLabel = $CanvasLayer/CenterContainer/VBoxContainer/RichTextLabel as RichTextLabel
 @onready var _text_edit: TextEdit = $CanvasLayer/CenterContainer/VBoxContainer/VBoxContainer/TextEdit as TextEdit
+@onready var _android_texture_rect: TextureRect = $CanvasLayer/CenterContainer/VBoxContainer/HBoxContainer/AndroidTextureRect as TextureRect
+@onready var _ios_texture_rect: TextureRect = $CanvasLayer/CenterContainer/VBoxContainer/HBoxContainer/iOSTextureRect as TextureRect
+
+var _active_texture_rect: TextureRect
 
 
 func _ready() -> void:
+	if OS.has_feature("ios"):
+		_android_texture_rect.hide()
+		_active_texture_rect = _ios_texture_rect
+	else:
+		_ios_texture_rect.hide()
+		_active_texture_rect = _android_texture_rect
+
 	if not deeplink.host.is_empty():
 		_text_edit.text = deeplink.host
 

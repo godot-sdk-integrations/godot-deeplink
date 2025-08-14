@@ -191,12 +191,6 @@ function remove_pods()
 
 function download_godot()
 {
-	if [[ $# -eq 0 ]]
-	then
-		display_error "Error: Please provide the Godot version as an option argument for -G option."
-		exit 1
-	fi
-
 	if [[ -d "$GODOT_DIR" ]]
 	then
 		display_error "Error: $GODOT_DIR directory already exists. Won't download."
@@ -407,8 +401,7 @@ function create_zip_archive()
 			SED_INPLACE=(-i)
 		fi
 
-		for file in "$tmp_directory"/*.{gd,cfg,gdip}; do
-			[[ -e "$file" ]] || continue
+		find "$tmp_directory" -type f \( -name '*.gd' -o -name '*.cfg' -o -name '*.gdip' \) | while IFS= read -r file; do
 			echo_green "Editing: $file"
 
 			# Escape variables to handle special characters
@@ -457,7 +450,7 @@ function create_zip_archive()
 }
 
 
-while getopts "aA:bcgG:hHipPt:z" option; do
+while getopts "aAbcgG:hHipPt:z" option; do
 	case $option in
 		h)
 			display_help

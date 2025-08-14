@@ -127,6 +127,26 @@ class IosExportPlugin extends EditorExportPlugin:
 	</plist>\n"""
 	const EXPORT_FILE_SUFFIX: String = ".ipa"
 
+	const UNIVERSAL_LINK_SCHEMES: Array[String] = ["http", "https"]
+
+	const CUSTOM_SCHEME_PLIST_ENTRY: String = """
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>%s</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				%s
+			</array>
+		</dict>
+	</array>
+	"""
+
+	const CUSTOM_SCHEME_ARRAY_ITEM: String = """
+				<string>%s</string>
+	"""
+
 	func _supports_platform(platform: EditorExportPlatform) -> bool:
 		if platform is EditorExportPlatformIOS:
 			return true
@@ -143,6 +163,17 @@ class IosExportPlugin extends EditorExportPlugin:
 		_export_config = DeeplinkExportConfig.new()
 		if not _export_config.export_config_file_exists() or _export_config.load_export_config_from_file() != OK:
 			_export_config.load_export_config_from_node()
+
+		# Compile a list of configured custom schemes
+		var __custom_schemes: String = ""
+		for __config in _export_config.deeplinks:
+			if __config.scheme.to_lower() not in UNIVERSAL_LINK_SCHEMES:
+				__custom_schemes += CUSTOM_SCHEME_ARRAY_ITEM % __config.scheme
+				Deeplink.log_info("Adding custom scheme '%s'." % __config.scheme)
+
+		# Add custom schemes to pList
+		if not __custom_schemes.is_empty():
+			add_ios_plist_content(CUSTOM_SCHEME_PLIST_ENTRY % [get_option("application/bundle_identifier"), __custom_schemes])
 
 		for __framework in IOS_FRAMEWORKS:
 			add_ios_framework(__framework)
@@ -177,7 +208,7 @@ class IosExportPlugin extends EditorExportPlugin:
 						for __config in _export_config.deeplinks:
 							__file.store_line("\t\t<string>applinks:%s</string>" % __config.host)
 							# As opposed to Android, in iOS __config.scheme, __config.path_prefix are
-							# configured on the server side (apple-app-site-association file)
+							# configured on the server side for Universal Links (apple-app-site-association file)
 
 						__file.store_string(ENTITLEMENTS_FILE_FOOTER)
 						__file.close()
