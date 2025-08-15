@@ -61,6 +61,16 @@ class AndroidExportPlugin extends EditorExportPlugin:
 			</intent-filter>
 """
 
+	const DEEPLINK_INTENT_FILTER_WITHOUT_HOST_FORMAT = """
+			<intent-filter android:label="%s" %s>
+				<action android:name="android.intent.action.VIEW" />
+				%s
+				%s
+				<data android:scheme="%s"
+					android:pathPrefix="%s" />
+			</intent-filter>
+"""
+
 	const DEEPLINK_INTENT_FILTER_AUTO_VERIFY_PROPERTY = "android:autoVerify=\"true\""
 	const DEEPLINK_INTENT_FILTER_DEFAULT_CATEGORY = "<category android:name=\"android.intent.category.DEFAULT\" />"
 	const DEEPLINK_INTENT_FILTER_BROWSABLE_CATEGORY = "<category android:name=\"android.intent.category.BROWSABLE\" />"
@@ -97,15 +107,25 @@ class AndroidExportPlugin extends EditorExportPlugin:
 		var __filters: String = ""
 
 		for __config in _export_config.deeplinks:
-			__filters += DEEPLINK_INTENT_FILTER_FORMAT % [
-						__config.label,
-						DEEPLINK_INTENT_FILTER_AUTO_VERIFY_PROPERTY if __config.is_auto_verify else "",
-						DEEPLINK_INTENT_FILTER_DEFAULT_CATEGORY if __config.is_default else "",
-						DEEPLINK_INTENT_FILTER_BROWSABLE_CATEGORY if __config.is_browsable else "",
-						__config.scheme,
-						__config.host,
-						__config.path_prefix
-					]
+			if __config.host.is_empty():
+				__filters += DEEPLINK_INTENT_FILTER_WITHOUT_HOST_FORMAT % [
+							__config.label,
+							DEEPLINK_INTENT_FILTER_AUTO_VERIFY_PROPERTY if __config.is_auto_verify else "",
+							DEEPLINK_INTENT_FILTER_DEFAULT_CATEGORY if __config.is_default else "",
+							DEEPLINK_INTENT_FILTER_BROWSABLE_CATEGORY if __config.is_browsable else "",
+							__config.scheme,
+							__config.path_prefix
+						]
+			else:
+				__filters += DEEPLINK_INTENT_FILTER_FORMAT % [
+							__config.label,
+							DEEPLINK_INTENT_FILTER_AUTO_VERIFY_PROPERTY if __config.is_auto_verify else "",
+							DEEPLINK_INTENT_FILTER_DEFAULT_CATEGORY if __config.is_default else "",
+							DEEPLINK_INTENT_FILTER_BROWSABLE_CATEGORY if __config.is_browsable else "",
+							__config.scheme,
+							__config.host,
+							__config.path_prefix
+						]
 
 		return DEEPLINK_ACTIVITY_FORMAT % __filters
 
