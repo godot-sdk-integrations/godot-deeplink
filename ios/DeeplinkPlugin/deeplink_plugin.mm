@@ -10,15 +10,19 @@
 #import "core/config/engine.h"
 
 
-DeeplinkPlugin *plugin;
+DeeplinkPlugin *deeplink_plugin;
 
 void deeplink_plugin_init() {
-	plugin = memnew(DeeplinkPlugin);
-	Engine::get_singleton()->add_singleton(Engine::Singleton("DeeplinkPlugin", plugin));
+	NSLog(@"DeeplinkPlugin: Initializing plugin at timestamp: %f", [[NSDate date] timeIntervalSince1970]);
+	deeplink_plugin = memnew(DeeplinkPlugin);
+	Engine::get_singleton()->add_singleton(Engine::Singleton("DeeplinkPlugin", deeplink_plugin));
+	NSLog(@"DeeplinkPlugin: Singleton registered");
 }
 
 void deeplink_plugin_deinit() {
-	if (plugin) {
-		memdelete(plugin);
+	NSLog(@"DeeplinkPlugin: Deinitializing plugin");
+	if (deeplink_plugin) {
+		memdelete(deeplink_plugin);
+		deeplink_plugin = nullptr;
 	}
 }
