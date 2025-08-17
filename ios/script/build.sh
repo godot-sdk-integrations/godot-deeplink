@@ -71,29 +71,28 @@ function display_help()
 	echo_yellow "If plugin version is not set with the -z option, then Godot version will be used."
 	echo
 	$ROOT_DIR/script/echocolor.sh -Y "Syntax:"
-	echo_yellow "	$0 [-a|A <godot version>|c|g|G <godot version>|h|H|i|p|P|t <timeout>|z <version>]"
+	echo_yellow "	$0 [-a|A|c|g|G|h|H|i|p|P|t <timeout>|z]"
 	echo
 	$ROOT_DIR/script/echocolor.sh -Y "Options:"
 	echo_yellow "	a	generate godot headers and build plugin"
-	echo_yellow "	A	download specified godot version, generate godot headers, and"
+	echo_yellow "	A	download configured godot version, generate godot headers, and"
 	echo_yellow "	 	build plugin"
 	echo_yellow "	b	build plugin"
 	echo_yellow "	c	remove any existing plugin build"
 	echo_yellow "	g	remove godot directory"
-	echo_yellow "	G	download the godot version specified in the option argument"
-	echo_yellow "	 	into godot directory"
+	echo_yellow "	G	download the configured godot version into godot directory"
 	echo_yellow "	h	display usage information"
 	echo_yellow "	H	generate godot headers"
 	echo_yellow "	i	ignore if an unsupported godot version selected and continue"
 	echo_yellow "	p	remove pods and pod repo trunk"
 	echo_yellow "	P	install pods"
 	echo_yellow "	t	change timeout value for godot build"
-	echo_yellow "	z	create zip archive with given version added to the file name"
+	echo_yellow "	z	create zip archive, include configured version in the file name"
 	echo
 	$ROOT_DIR/script/echocolor.sh -Y "Examples:"
 	echo_yellow "	* clean existing build, remove godot, and rebuild all"
-	echo_yellow "		$> $0 -cgA 4.2"
-	echo_yellow "		$> $0 -cgpG 4.2 -HPbz 1.0"
+	echo_yellow "		$> $0 -cgA"
+	echo_yellow "		$> $0 -cgpGHPbz"
 	echo
 	echo_yellow "	* clean existing build, remove pods and pod repo trunk, and rebuild plugin"
 	echo_yellow "		$> $0 -cpPb"
@@ -102,9 +101,9 @@ function display_help()
 	echo_yellow "		$> $0 -ca"
 	echo
 	echo_yellow "	* clean existing build and rebuild plugin with custom plugin version"
-	echo_yellow "		$> $0 -cHbz 1.0"
+	echo_yellow "		$> $0 -cHbz"
 	echo
-	echo_yellow "	* clean existing build and rebuild plugin with custom build timeout"
+	echo_yellow "	* clean existing build and rebuild plugin with custom build-header timeout"
 	echo_yellow "		$> $0 -cHbt 15"
 	echo
 }
@@ -218,7 +217,7 @@ function generate_godot_headers()
 
 	display_status "starting godot build to generate godot headers..."
 
-	$SCRIPT_DIR/run_with_timeout.sh -t $BUILD_TIMEOUT -c "scons platform=ios target=template_release" -d ./godot || true
+	$SCRIPT_DIR/run_with_timeout.sh -t $BUILD_TIMEOUT -c "scons platform=ios target=template_release" -d $GODOT_DIR || true
 
 	display_status "terminated godot build after $BUILD_TIMEOUT seconds..."
 }
@@ -252,7 +251,7 @@ function generate_static_library()
 function install_pods()
 {
 	display_status "installing pods..."
-	pod install --repo-update || true
+	pod install --repo-update --project-directory=$IOS_DIR/ || true
 }
 
 
