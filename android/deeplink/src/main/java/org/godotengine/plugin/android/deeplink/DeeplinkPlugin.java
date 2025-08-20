@@ -49,7 +49,7 @@ public class DeeplinkPlugin extends GodotPlugin {
 	}
 
 	@UsedByGodot
-	public int initialize(String domain) {
+	public int initialize() {
 		int result = 0;
 
 		if (!is_initialized) {
