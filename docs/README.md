@@ -1,12 +1,12 @@
 <p align="center">
-	<img width="256" height="256" src="demo/assets/deeplink-android.png">
+	<img width="256" height="256" src="../demo/assets/deeplink-android.png">
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<img width="256" height="256" src="demo/assets/deeplink-ios.png">
+	<img width="256" height="256" src="../demo/assets/deeplink-ios.png">
 </p>
 
 ---
 
-# <img src="addon/icon.png" width="24"> Godot Deeplink Plugin
+# <img src="../addon/icon.png" width="24"> Godot Deeplink Plugin
 
 Deeplink plugin provides a unified GDScript interface for processing of App Links on the Android platform and Universal Links on the iOS platform in order to enable direct navigation to specific app content.
 
@@ -18,7 +18,7 @@ Deeplink plugin provides a unified GDScript interface for processing of App Link
 
 ---
 
-## <img src="addon/icon.png" width="20"> Table of Contents
+## <img src="../addon/icon.png" width="20"> Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
 - [Signals](#signals)
@@ -31,9 +31,9 @@ Deeplink plugin provides a unified GDScript interface for processing of App Link
 
 ---
 
-<a name="installation">
+<a name="installation"></a>
 
-## <img src="addon/icon.png" width="20"> Installation
+## <img src="../addon/icon.png" width="20"> Installation
 
 **Uninstall previous versions** before installing.
 If using both Android & iOS, ensure **same addon interface version**.
@@ -52,9 +52,9 @@ If using both Android & iOS, ensure **same addon interface version**.
 
 ---
 
-<a name="usage">
+<a name="usage"></a>
 
-## <img src="addon/icon.png" width="20"> Usage
+## <img src="../addon/icon.png" width="20"> Usage
 - Add `Deeplink` nodes to your scene per URL association and follow the following steps:
 	- set the required field on each `Deeplink` node
 		- `scheme`
@@ -76,17 +76,17 @@ If using both Android & iOS, ensure **same addon interface version**.
 	
 	---
 
-<a name="signals">
+<a name="signals"></a>
 
-## <img src="addon/icon.png" width="20"> Signals
+## <img src="../addon/icon.png" width="20"> Signals
 
 - `deeplink_received(url: DeeplinkUrl)`: Emitted when app content is requested via deeplink.
 
 ---
 
-<a name="export">
+<a name="export"></a>
 
-## <img src="addon/icon.png" width="20"> Export
+## <img src="../addon/icon.png" width="20"> Export
 
 Three options:
 
@@ -131,9 +131,9 @@ During iOS export, the plugin searches for `Deeplink` nodes in the scene that is
 
 ---
 
-<a name="platform-specific-notes">
+<a name="platform-specific-notes"></a>
 
-## <img src="addon/icon.png" width="20"> Platform-Specific Notes
+## <img src="../addon/icon.png" width="20"> Platform-Specific Notes
 
 ### Android
 - **Build:** [Create custom Android gradle build](https://docs.godotengine.org/en/stable/tutorials/export/android_gradle_build.html).
@@ -152,32 +152,32 @@ During iOS export, the plugin searches for `Deeplink` nodes in the scene that is
 
 ---
 
-<a name="links">
+<a name="links"></a>
 
-# <img src="addon/icon.png" width="20"> Links
+# <img src="../addon/icon.png" width="20"> Links
 
 - [AssetLib Entry Android](https://godotengine.org/asset-library/asset/2534)
 - [AssetLib Entry iOS](https://godotengine.org/asset-library/asset/3191)
 
 ---
 
-<a name="all-plugins">
+<a name="all-plugins"></a>
 
-# <img src="addon/icon.png" width="24"> All Plugins
+# <img src="../addon/icon.png" width="24"> All Plugins
 
-| Plugin | Android | iOS |
-| :---: | :--- | :--- |
-| [Notification Scheduler](https://github.com/godot-sdk-integrations/godot-notification-scheduler) | ✅ | ✅ |
-| [Admob](https://github.com/godot-sdk-integrations/godot-admob) | ✅ | ✅ |
-| [Deeplink](https://github.com/godot-sdk-integrations/godot-deeplink) | ✅ | ✅ |
-| [Share](https://github.com/godot-sdk-integrations/godot-share) | ✅ | ✅ |
-| [In-App Review](https://github.com/godot-sdk-integrations/godot-inapp-review) | ✅ | ✅ |
+| Plugin | Android | iOS | Free | Open Source | License |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| [Notification Scheduler](https://github.com/godot-sdk-integrations/godot-notification-scheduler) | ✅ | ✅ | ✅ | ✅ | MIT |
+| [Admob](https://github.com/godot-sdk-integrations/godot-admob) | ✅ | ✅ | ✅ | ✅ | MIT |
+| [Deeplink](https://github.com/godot-sdk-integrations/godot-deeplink) | ✅ | ✅ | ✅ | ✅ | MIT |
+| [Share](https://github.com/godot-sdk-integrations/godot-share) | ✅ | ✅ | ✅ | ✅ | MIT |
+| [In-App Review](https://github.com/godot-sdk-integrations/godot-inapp-review) | ✅ | ✅ | ✅ | ✅ | MIT |
 
 ---
 
-<a name="credits">
+<a name="credits"></a>
 
-# <img src="addon/icon.png" width="24"> Credits
+# <img src="../addon/icon.png" width="24"> Credits
 
 Developed by [Cengiz](https://github.com/cengiz-pz)
 
@@ -187,54 +187,8 @@ Original repository: [Godot Deeplink Plugin](https://github.com/godot-sdk-integr
 
 ---
 
-<a name="contributing">
+<a name="contributing"></a>
 
-# <img src="addon/icon.png" width="24"> Contributing
+# <img src="../addon/icon.png" width="24"> Contributing
 
-This section provides information on how to build the plugin for contributors.
-
----
-
-## <img src="addon/icon.png" width="20"> iOS
-
-### Prerequisites
-
-- [Install SCons](https://scons.org/doc/production/HTML/scons-user/ch01s02.html)
-- [Install CocoaPods](https://guides.cocoapods.org/using/getting-started.html)
-
----
-
-### Build
-
-- Run `./script/build.sh -A <godot version>` initially to run a full build
-- Run `./script/build.sh -cgA <godot version>` to clean, redownload Godot, and rebuild
-- Run `./script/build.sh -ca` to clean and build without redownloading Godot
-- Run `./script/build.sh -cb -z4.0` to clean and build plugin without redownloading Godot and package in a zip archive as version 4.0
-- Run `./script/build.sh -h` for more information on the build script
-
-___
-
-## <img src="addon/icon.png" width="20"> Install Script
-
-- Run `./script/install.sh -t <target directory> -z <path to zip file>` install plugin to a Godot project.
-- Example `./script/install.sh -t demo -z build/release/DeeplinkPlugin-v4.0.zip` to install to demo app.
-
-___
-
-## <img src="addon/icon.png" width="20"> Libraries
-
-Library archives will be created in the `build/release` directory.
-
----
-
-## <img src="addon/icon.png" width="20"> Android
-
-### Build
-
-**Options:**
-1. Use [Android Studio](https://developer.android.com/studio) to build via **Build->Assemble Project** menu
-	- Switch **Active Build Variant** to **release** and repeat
-	- Run **packageDistribution** task to create release archive
-2. Use project-root-level **build.sh** script
-	- `./script/build.sh -ca` - clean existing build, do a debug build for Android
-	- `./script/build.sh -carz` - clean existing build, do a release build for Android, and create archive
+See [our guide](CONTRIBUTING.md) if you would like to contribute to this project.
