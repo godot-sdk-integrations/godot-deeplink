@@ -4,6 +4,7 @@
 
 [config]
 name="@pluginName@"
+binary_type="dynamic"
 binary="@pluginName@.xcframework"
 
 initialization="@iosInitializationMethod@"

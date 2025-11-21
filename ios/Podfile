@@ -2,8 +2,11 @@
 # © 2024-present https://github.com/cengiz-pz
 #
 
+install! 'cocoapods', :disable_input_output_paths => true
+
+use_frameworks! :linkage => :dynamic
+
 source 'https://github.com/CocoaPods/Specs.git'
-use_frameworks!
 
 # Get the directory of the Podfile
 podfile_dir = File.dirname(__FILE__)
@@ -38,12 +41,12 @@ read_properties(common_config_path, properties)
 # Read project-specific config second (overrides common config)
 read_properties(ios_config_path, properties)
 
-plugin_project_name = "#{properties['pluginModuleName']}_plugin"
+plugin_project_name = "#{properties['pluginNodeName']}Plugin"
 
 project "#{plugin_project_name}.xcodeproj"
 workspace "./#{plugin_project_name}.xcodeproj/project.xcworkspace"
 
-# Extract dependencies (assuming a comma-separated list of name:version pairs)
+# Extract dependencies
 deps = properties['dependencies']&.split(',')&.map(&:strip) || []
 
 target "#{plugin_project_name}" do

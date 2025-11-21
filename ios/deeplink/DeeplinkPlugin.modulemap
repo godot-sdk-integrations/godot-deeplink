@@ -1,0 +1,5 @@
+framework module DeeplinkPlugin {
+    umbrella header "DeeplinkPlugin.h"
+    export *
+    module * { export * }
+}

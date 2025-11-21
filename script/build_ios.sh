@@ -295,67 +295,88 @@ function build_plugin()
 		exit 1
 	fi
 
-	SCHEME=${1:-${PLUGIN_MODULE_NAME}_plugin}
-	PROJECT=${2:-${PLUGIN_MODULE_NAME}_plugin.xcodeproj}
+	SCHEME=${1:-${PLUGIN_NAME}}
+	PROJECT=${2:-${PLUGIN_NAME}.xcodeproj}
+	WORKSPACE="$IOS_DIR/$PROJECT/project.xcworkspace" 
 	OUT=${PLUGIN_NAME}
-	CLASS=${PLUGIN_NAME}
+	FRAMEWORK_NAME="${OUT}.framework"
 
-	mkdir -p $FRAMEWORK_DIR
-	mkdir -p $LIB_DIR
+	mkdir -p "$FRAMEWORK_DIR"
 
-	xcodebuild archive \
-		-project "$IOS_DIR/$PROJECT" \
-		-scheme $SCHEME \
-		-archivePath "$LIB_DIR/ios_release.xcarchive" \
+	# Define a unique Bundle Identifier for the framework
+	FRAMEWORK_BUNDLE_ID="org.godotengine.plugin.${PLUGIN_MODULE_NAME}"
+
+	# Build Flags:
+	# 1. OTHER_LDFLAGS='\$(inherited) -undefined dynamic_lookup': FIX for 'symbol not found' error.
+	# 2. PRODUCT_BUNDLE_IDENTIFIER: FIX for 'CFBundleIdentifier' error.
+	# The eval command below requires the complex quoting structure used here.
+	BUILD_FLAGS="GENERATE_INFOPLIST_FILE=YES MARKETING_VERSION=$PLUGIN_VERSION DEBUG_INFORMATION_FORMAT=dwarf-with-dsym PRODUCT_BUNDLE_IDENTIFIER=$FRAMEWORK_BUNDLE_ID DEFINES_MODULE=YES BUILD_LIBRARIES_FOR_DISTRIBUTION=YES SKIP_INSTALL=NO OTHER_LDFLAGS='\$(inherited) -undefined dynamic_lookup' OTHER_CFLAGS='\$(inherited) -fno-visibility-inlines-hidden'"
+
+	# ---------------------------
+	# 1. Build RELEASE Variants
+	# ---------------------------
+	display_status "Building Release - arm64 (device)"
+	eval xcodebuild -workspace "$WORKSPACE" \
+		-scheme "$SCHEME" \
+		-configuration Release \
 		-sdk iphoneos \
-		SKIP_INSTALL=NO
+		-quiet \
+		$BUILD_FLAGS \
+		clean build \
+		CONFIGURATION_BUILD_DIR="$FRAMEWORK_DIR/device"
 
-	xcodebuild archive \
-		-project "$IOS_DIR/$PROJECT" \
-		-scheme $SCHEME \
-		-archivePath "$LIB_DIR/sim_release.xcarchive" \
+	display_status "Building Release - x86_64/arm64 (simulator)"
+	eval xcodebuild -workspace "$WORKSPACE" \
+		-scheme "$SCHEME" \
+		-configuration Release \
 		-sdk iphonesimulator \
-		SKIP_INSTALL=NO
+		-quiet \
+		$BUILD_FLAGS \
+		clean build \
+		CONFIGURATION_BUILD_DIR="$FRAMEWORK_DIR/simulator"
 
-	xcodebuild archive \
-		-project "$IOS_DIR/$PROJECT" \
-		-scheme $SCHEME \
-		-archivePath "$LIB_DIR/ios_debug.xcarchive" \
+	# ---------------------------
+	# 2. Build DEBUG Variants
+	# ---------------------------
+	display_status "Building Debug - arm64 (device)"
+	eval xcodebuild -workspace "$WORKSPACE" \
+		-scheme "$SCHEME" \
+		-configuration Debug \
 		-sdk iphoneos \
-		SKIP_INSTALL=NO \
-		GCC_PREPROCESSOR_DEFINITIONS="DEBUG_ENABLED=1"
+		GCC_PREPROCESSOR_DEFINITIONS="DEBUG_ENABLED=1" \
+		$BUILD_FLAGS \
+		clean build \
+		CONFIGURATION_BUILD_DIR="$FRAMEWORK_DIR/device_debug"
 
-	xcodebuild archive \
-		-project "$IOS_DIR/$PROJECT" \
-		-scheme $SCHEME \
-		-archivePath "$LIB_DIR/sim_debug.xcarchive" \
+	display_status "Building Debug - x86_64/arm64 (simulator)"
+	eval xcodebuild -workspace "$WORKSPACE" \
+		-scheme "$SCHEME" \
+		-configuration Debug \
 		-sdk iphonesimulator \
-		SKIP_INSTALL=NO \
-		GCC_PREPROCESSOR_DEFINITIONS="DEBUG_ENABLED=1"
+		GCC_PREPROCESSOR_DEFINITIONS="DEBUG_ENABLED=1" \
+		$BUILD_FLAGS \
+		clean build \
+		CONFIGURATION_BUILD_DIR="$FRAMEWORK_DIR/simulator_debug"
 
-	mv $LIB_DIR/ios_release.xcarchive/Products/usr/local/lib/lib${SCHEME}.a $LIB_DIR/ios_release.xcarchive/Products/usr/local/lib/${OUT}.a
-	mv $LIB_DIR/sim_release.xcarchive/Products/usr/local/lib/lib${SCHEME}.a $LIB_DIR/sim_release.xcarchive/Products/usr/local/lib/${OUT}.a
-	mv $LIB_DIR/ios_debug.xcarchive/Products/usr/local/lib/lib${SCHEME}.a $LIB_DIR/ios_debug.xcarchive/Products/usr/local/lib/${OUT}.a
-	mv $LIB_DIR/sim_debug.xcarchive/Products/usr/local/lib/lib${SCHEME}.a $LIB_DIR/sim_debug.xcarchive/Products/usr/local/lib/${OUT}.a
-
-	if [[ -d "$FRAMEWORK_DIR/${OUT}.release.xcframework" ]]
-	then
-		rm -rf $FRAMEWORK_DIR/${OUT}.release.xcframework
-	fi
-
-	if [[ -d "$FRAMEWORK_DIR/${OUT}.debug.xcframework" ]]
-	then
-		rm -rf $FRAMEWORK_DIR/${OUT}.debug.xcframework
-	fi
-
+	# ---------------------------
+	# 3. Create XCFrameworks
+	# ---------------------------
+	display_status "Creating Release XCFramework"
+	rm -rf "$FRAMEWORK_DIR/${OUT}.release.xcframework"
 	xcodebuild -create-xcframework \
-		-library "$LIB_DIR/ios_release.xcarchive/Products/usr/local/lib/${OUT}.a" \
-		-library "$LIB_DIR/sim_release.xcarchive/Products/usr/local/lib/${OUT}.a" \
+		-framework "$FRAMEWORK_DIR/device/$FRAMEWORK_NAME" \
+		-debug-symbols "$FRAMEWORK_DIR/device/$FRAMEWORK_NAME.dSYM" \
+		-framework "$FRAMEWORK_DIR/simulator/$FRAMEWORK_NAME" \
+		-debug-symbols "$FRAMEWORK_DIR/simulator/$FRAMEWORK_NAME.dSYM" \
 		-output "$FRAMEWORK_DIR/${OUT}.release.xcframework"
 
+	display_status "Creating Debug XCFramework"
+	rm -rf "$FRAMEWORK_DIR/${OUT}.debug.xcframework"
 	xcodebuild -create-xcframework \
-		-library "$LIB_DIR/ios_debug.xcarchive/Products/usr/local/lib/${OUT}.a" \
-		-library "$LIB_DIR/sim_debug.xcarchive/Products/usr/local/lib/${OUT}.a" \
+		-framework "$FRAMEWORK_DIR/device_debug/$FRAMEWORK_NAME" \
+		-debug-symbols "$FRAMEWORK_DIR/device_debug/$FRAMEWORK_NAME.dSYM" \
+		-framework "$FRAMEWORK_DIR/simulator_debug/$FRAMEWORK_NAME" \
+		-debug-symbols "$FRAMEWORK_DIR/simulator_debug/$FRAMEWORK_NAME.dSYM" \
 		-output "$FRAMEWORK_DIR/${OUT}.debug.xcframework"
 }
 
