@@ -319,9 +319,6 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/godot",
-					"$(SRCROOT)/godot/drivers/apple_embedded",
-					"$(SRCROOT)/godot/platform/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -375,6 +372,9 @@
 					"-DIPHONE_ENABLED",
 					"-DUNIX_ENABLED",
 					"-DCOREAUDIO_ENABLED",
+					"-isystem $(SRCROOT)/godot",
+					"-isystem $(SRCROOT)/godot/drivers/apple_embedded",
+					"-isystem $(SRCROOT)/godot/platform/ios",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -401,9 +401,6 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/godot",
-					"$(SRCROOT)/godot/drivers/apple_embedded",
-					"$(SRCROOT)/godot/platform/ios",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -448,6 +445,9 @@
 					"-DIPHONE_ENABLED",
 					"-DUNIX_ENABLED",
 					"-DCOREAUDIO_ENABLED",
+					"-isystem $(SRCROOT)/godot",
+					"-isystem $(SRCROOT)/godot/drivers/apple_embedded",
+					"-isystem $(SRCROOT)/godot/platform/ios",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
