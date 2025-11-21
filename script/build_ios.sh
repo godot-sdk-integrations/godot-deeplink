@@ -188,61 +188,69 @@ function remove_pods()
 	else
 		display_warning "Warning: '$PODS_DIR' directory does not exist"
 	fi
+
+	if [[ -f $IOS_DIR/Podfile.lock ]]
+	then
+		display_status "removing '$IOS_DIR/Podfile.lock' file..."
+		rm -f $IOS_DIR/Podfile.lock
+	else
+		display_warning "Warning: '$IOS_DIR/Podfile.lock' file does not exist"
+	fi
 }
 
 
 function download_godot()
 {
-    if [[ -d "$GODOT_DIR" ]]; then
-        display_error "Error: $GODOT_DIR directory already exists. Remove it first or use a different directory."
-        exit 1
-    fi
+	if [[ -d "$GODOT_DIR" ]]; then
+		display_error "Error: $GODOT_DIR directory already exists. Remove it first or use a different directory."
+		exit 1
+	fi
 
-    local filename="godot-${GODOT_VERSION}-${GODOT_RELEASE_TYPE}.tar.xz"
-    local release_url="https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-${GODOT_RELEASE_TYPE}/${filename}"
-    local archive_path="${GODOT_DIR}.tar.xz"
-    local temp_extract_dir=$(mktemp -d)
+	local filename="godot-${GODOT_VERSION}-${GODOT_RELEASE_TYPE}.tar.xz"
+	local release_url="https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-${GODOT_RELEASE_TYPE}/${filename}"
+	local archive_path="${GODOT_DIR}.tar.xz"
+	local temp_extract_dir=$(mktemp -d)
 
-    display_status "Downloading Godot ${GODOT_VERSION}-${GODOT_RELEASE_TYPE} (official pre-built binary)..."
-    echo_blue "URL: $release_url"
+	display_status "Downloading Godot ${GODOT_VERSION}-${GODOT_RELEASE_TYPE} (official pre-built binary)..."
+	echo_blue "URL: $release_url"
 
-    # Check required tools
-    if ! command -v curl >/dev/null 2>&1; then
-        display_error "Error: curl is required to download the archive."
-        exit 1
-    fi
-    if ! command -v tar >/dev/null 2>&1; then
-        display_error "Error: tar is required to extract the archive."
-        exit 1
-    fi
+	# Check required tools
+	if ! command -v curl >/dev/null 2>&1; then
+		display_error "Error: curl is required to download the archive."
+		exit 1
+	fi
+	if ! command -v tar >/dev/null 2>&1; then
+		display_error "Error: tar is required to extract the archive."
+		exit 1
+	fi
 
-    # Download the .tar.xz archive
-    if ! curl -L --fail --progress-bar -o "$archive_path" "$release_url"; then
-        rm -f "$archive_path"
-        display_error "Failed to download Godot binary from:\n  $release_url\nPlease verify that GODOT_VERSION (${GODOT_VERSION}) and GODOT_RELEASE_TYPE (${GODOT_RELEASE_TYPE}) are correct."
-        exit 1
-    fi
+	# Download the .tar.xz archive
+	if ! curl -L --fail --progress-bar -o "$archive_path" "$release_url"; then
+		rm -f "$archive_path"
+		display_error "Failed to download Godot binary from:\n  $release_url\nPlease verify that GODOT_VERSION (${GODOT_VERSION}) and GODOT_RELEASE_TYPE (${GODOT_RELEASE_TYPE}) are correct."
+		exit 1
+	fi
 
-    display_status "Extracting $filename ..."
-    if ! tar -xaf "$archive_path" -C "$temp_extract_dir" --strip-components=1; then
-        rm -f "$archive_path"
-        rm -rf "$temp_extract_dir"
-        display_error "Failed to extract the .tar.xz archive."
-        exit 1
-    fi
+	display_status "Extracting $filename ..."
+	if ! tar -xaf "$archive_path" -C "$temp_extract_dir" --strip-components=1; then
+		rm -f "$archive_path"
+		rm -rf "$temp_extract_dir"
+		display_error "Failed to extract the .tar.xz archive."
+		exit 1
+	fi
 
-    # Move extracted contents to final destination
-    mkdir -p "$GODOT_DIR"
-    mv "$temp_extract_dir"/* "$GODOT_DIR"/
+	# Move extracted contents to final destination
+	mkdir -p "$GODOT_DIR"
+	mv "$temp_extract_dir"/* "$GODOT_DIR"/
 
-    # Cleanup
-    rm -f "$archive_path"
-    rm -rf "$temp_extract_dir"
+	# Cleanup
+	rm -f "$archive_path"
+	rm -rf "$temp_extract_dir"
 
-    # Write version marker for the rest of the build system
-    echo "$GODOT_VERSION" > "$GODOT_DIR/GODOT_VERSION"
+	# Write version marker for the rest of the build system
+	echo "$GODOT_VERSION" > "$GODOT_DIR/GODOT_VERSION"
 
-    echo_green "Godot ${GODOT_VERSION}-${GODOT_RELEASE_TYPE} successfully downloaded and extracted to $GODOT_DIR"
+	echo_green "Godot ${GODOT_VERSION}-${GODOT_RELEASE_TYPE} successfully downloaded and extracted to $GODOT_DIR"
 }
 
 
@@ -271,14 +279,12 @@ function install_pods()
 
 function build_plugin()
 {
-	if [[ ! -d "$PODS_DIR" ]]
-	then
+	if [[ ! -d "$PODS_DIR" ]]; then
 		display_error "Error: Pods directory does not exist. Run 'pod install' first."
 		exit 1
 	fi
 
-	if [[ ! -d "$GODOT_DIR" ]]
-	then
+	if [[ ! -d "$GODOT_DIR" ]]; then
 		display_error "Error: $GODOT_DIR directory does not exist. Can't build plugin."
 		exit 1
 	fi
