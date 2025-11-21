@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6E26385BCDCE00488B15299B /* Pods_DeeplinkPlugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE54B9A1726DD96D9084D604 /* Pods_DeeplinkPlugin.framework */; };
+		073B52C82ECF241C0063663B /* deeplink_service.mm in Sources */ = {isa = PBXBuildFile; fileRef = 073B52C52ECF241C0063663B /* deeplink_service.mm */; };
+		073B52C92ECF241C0063663B /* gdp_converter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 073B52C72ECF241C0063663B /* gdp_converter.mm */; };
 		90CAAA9924E71FF10013969F /* deeplink_plugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 90CAAA9824E71FF10013969F /* deeplink_plugin.mm */; };
 		90CAAAA424E724C50013969F /* deeplink_plugin_implementation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 90CAAAA324E724C50013969F /* deeplink_plugin_implementation.mm */; };
+		94A1B0B2910D06DA0F4D3D3C /* Pods_deeplink_plugin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 380C444E6383B0C8ACA7CA7D /* Pods_deeplink_plugin.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,14 +27,21 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		073B52C32ECF241C0063663B /* deeplink_plugin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "deeplink_plugin-Bridging-Header.h"; sourceTree = "<group>"; };
+		073B52C42ECF241C0063663B /* deeplink_service.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = deeplink_service.h; sourceTree = "<group>"; };
+		073B52C52ECF241C0063663B /* deeplink_service.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = deeplink_service.mm; sourceTree = "<group>"; };
+		073B52C62ECF241C0063663B /* gdp_converter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gdp_converter.h; sourceTree = "<group>"; };
+		073B52C72ECF241C0063663B /* gdp_converter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = gdp_converter.mm; sourceTree = "<group>"; };
+		1A3D1E30D9DC57319C20B62B /* Pods-deeplink_plugin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-deeplink_plugin.release.xcconfig"; path = "Target Support Files/Pods-deeplink_plugin/Pods-deeplink_plugin.release.xcconfig"; sourceTree = "<group>"; };
+		380C444E6383B0C8ACA7CA7D /* Pods_deeplink_plugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_deeplink_plugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		403D7C7BCFBA671DEF15AE95 /* Pods-deeplink_plugin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-deeplink_plugin.debug.xcconfig"; path = "Target Support Files/Pods-deeplink_plugin/Pods-deeplink_plugin.debug.xcconfig"; sourceTree = "<group>"; };
 		90CAAA9424E71FF10013969F /* libdeeplink_plugin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libdeeplink_plugin.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		90CAAA9724E71FF10013969F /* deeplink_plugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = deeplink_plugin.h; sourceTree = "<group>"; };
 		90CAAA9824E71FF10013969F /* deeplink_plugin.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = deeplink_plugin.mm; sourceTree = "<group>"; };
 		90CAAAA324E724C50013969F /* deeplink_plugin_implementation.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = deeplink_plugin_implementation.mm; sourceTree = "<group>"; };
 		90CAAAA524E724D00013969F /* deeplink_plugin_implementation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = deeplink_plugin_implementation.h; sourceTree = "<group>"; };
-		C0CAB0568EEE793F12864ABE /* Pods-DeeplinkPlugin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeeplinkPlugin.release.xcconfig"; path = "Target Support Files/Pods-DeeplinkPlugin/Pods-DeeplinkPlugin.release.xcconfig"; sourceTree = "<group>"; };
-		EE54B9A1726DD96D9084D604 /* Pods_DeeplinkPlugin.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DeeplinkPlugin.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F3A5C2FE28FC5D43F53189FC /* Pods-DeeplinkPlugin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeeplinkPlugin.debug.xcconfig"; path = "Target Support Files/Pods-DeeplinkPlugin/Pods-DeeplinkPlugin.debug.xcconfig"; sourceTree = "<group>"; };
+		AAE936A0178A8EA9BB753CEA /* Pods-deeplink_plugin_implementation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-deeplink_plugin_implementation.debug.xcconfig"; path = "Target Support Files/Pods-inapp_review_plugin/Pods-deeplink_plugin_implementation.debug.xcconfig"; sourceTree = "<group>"; };
+		D5F7A9D28867FD798F31BF3B /* Pods-deeplink_plugin_implementation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-deeplink_plugin_implementation.release.xcconfig"; path = "Target Support Files/Pods-inapp_review_plugin/Pods-deeplink_plugin_implementation.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,30 +49,31 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6E26385BCDCE00488B15299B /* Pods_DeeplinkPlugin.framework in Frameworks */,
+				94A1B0B2910D06DA0F4D3D3C /* Pods_deeplink_plugin.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		54FDF81180430A6C50CFB810 /* Pods */ = {
+		66EA7AD27171A8F93A267403 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F3A5C2FE28FC5D43F53189FC /* Pods-DeeplinkPlugin.debug.xcconfig */,
-				C0CAB0568EEE793F12864ABE /* Pods-DeeplinkPlugin.release.xcconfig */,
+				403D7C7BCFBA671DEF15AE95 /* Pods-deeplink_plugin.debug.xcconfig */,
+				1A3D1E30D9DC57319C20B62B /* Pods-deeplink_plugin.release.xcconfig */,
+				AAE936A0178A8EA9BB753CEA /* Pods-deeplink_plugin_implementation.debug.xcconfig */,
+				D5F7A9D28867FD798F31BF3B /* Pods-deeplink_plugin_implementation.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
 		90CAAA8B24E71FF10013969F = {
 			isa = PBXGroup;
 			children = (
-				90CAAA9624E71FF10013969F /* DeeplinkPlugin */,
+				90CAAA9624E71FF10013969F /* deeplink */,
 				90CAAA9524E71FF10013969F /* Products */,
 				90CAAAA824E72A8A0013969F /* Frameworks */,
-				54FDF81180430A6C50CFB810 /* Pods */,
+				66EA7AD27171A8F93A267403 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -75,21 +85,26 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		90CAAA9624E71FF10013969F /* DeeplinkPlugin */ = {
+		90CAAA9624E71FF10013969F /* deeplink */ = {
 			isa = PBXGroup;
 			children = (
+				073B52C32ECF241C0063663B /* deeplink_plugin-Bridging-Header.h */,
+				073B52C42ECF241C0063663B /* deeplink_service.h */,
+				073B52C52ECF241C0063663B /* deeplink_service.mm */,
+				073B52C62ECF241C0063663B /* gdp_converter.h */,
+				073B52C72ECF241C0063663B /* gdp_converter.mm */,
 				90CAAA9724E71FF10013969F /* deeplink_plugin.h */,
 				90CAAA9824E71FF10013969F /* deeplink_plugin.mm */,
 				90CAAAA524E724D00013969F /* deeplink_plugin_implementation.h */,
 				90CAAAA324E724C50013969F /* deeplink_plugin_implementation.mm */,
 			);
-			path = DeeplinkPlugin;
+			path = deeplink;
 			sourceTree = "<group>";
 		};
 		90CAAAA824E72A8A0013969F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				EE54B9A1726DD96D9084D604 /* Pods_DeeplinkPlugin.framework */,
+				380C444E6383B0C8ACA7CA7D /* Pods_deeplink_plugin.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -97,11 +112,11 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		90CAAA9324E71FF10013969F /* DeeplinkPlugin */ = {
+		90CAAA9324E71FF10013969F /* deeplink_plugin */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 90CAAA9D24E71FF10013969F /* Build configuration list for PBXNativeTarget "DeeplinkPlugin" */;
+			buildConfigurationList = 90CAAA9D24E71FF10013969F /* Build configuration list for PBXNativeTarget "deeplink_plugin" */;
 			buildPhases = (
-				4D5676F6FCAA3D3A24C336BC /* [CP] Check Pods Manifest.lock */,
+				DD9BF3CC2255FDE9321FE7D1 /* [CP] Check Pods Manifest.lock */,
 				90CAAA9024E71FF10013969F /* Sources */,
 				90CAAA9124E71FF10013969F /* Frameworks */,
 				90CAAA9224E71FF10013969F /* CopyFiles */,
@@ -110,8 +125,8 @@
 			);
 			dependencies = (
 			);
-			name = DeeplinkPlugin;
-			productName = DeeplinkPlugin;
+			name = deeplink_plugin;
+			productName = deeplink_plugin;
 			productReference = 90CAAA9424E71FF10013969F /* libdeeplink_plugin.a */;
 			productType = "com.apple.product-type.library.static";
 		};
@@ -126,10 +141,11 @@
 				TargetAttributes = {
 					90CAAA9324E71FF10013969F = {
 						CreatedOnToolsVersion = 11.6;
+						LastSwiftMigration = 1230;
 					};
 				};
 			};
-			buildConfigurationList = 90CAAA8F24E71FF10013969F /* Build configuration list for PBXProject "DeeplinkPlugin" */;
+			buildConfigurationList = 90CAAA8F24E71FF10013969F /* Build configuration list for PBXProject "deeplink_plugin" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -142,13 +158,13 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				90CAAA9324E71FF10013969F /* DeeplinkPlugin */,
+				90CAAA9324E71FF10013969F /* deeplink_plugin */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4D5676F6FCAA3D3A24C336BC /* [CP] Check Pods Manifest.lock */ = {
+		DD9BF3CC2255FDE9321FE7D1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -163,7 +179,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-DeeplinkPlugin-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-deeplink_plugin-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -179,6 +195,8 @@
 			files = (
 				90CAAAA424E724C50013969F /* deeplink_plugin_implementation.mm in Sources */,
 				90CAAA9924E71FF10013969F /* deeplink_plugin.mm in Sources */,
+				073B52C82ECF241C0063663B /* deeplink_service.mm in Sources */,
+				073B52C92ECF241C0063663B /* gdp_converter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,7 +209,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -235,7 +253,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -249,7 +267,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -287,7 +305,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -297,22 +315,16 @@
 		};
 		90CAAA9E24E71FF10013969F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F3A5C2FE28FC5D43F53189FC /* Pods-DeeplinkPlugin.debug.xcconfig */;
+			baseConfigurationReference = 403D7C7BCFBA671DEF15AE95 /* Pods-deeplink_plugin.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = (
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/godot",
-					"$(SRCROOT)/godot/main",
-					"$(SRCROOT)/godot/core",
-					"$(SRCROOT)/godot/core/os",
-					"$(SRCROOT)/godot/servers",
-					"$(SRCROOT)/godot/platform",
-					"$(SRCROOT)/godot/platform/ios",
-					"$(SRCROOT)/godot/modules",
-					"$(SRCROOT)/godot/scene",
-					"$(SRCROOT)/godot/drivers",
-					"$(SRCROOT)/godot/trirdparty",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -320,7 +332,6 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
-					"-fcxx-modules",
 					"-g",
 					"-DDEBUG",
 					"-DDEBUG_ENABLED",
@@ -328,35 +339,74 @@
 					"-DDISABLE_FORCED_INLINE",
 					"-DTYPED_METHOD_BIND",
 					"-fmodules",
+					"-fobjc-arc",
+					"-fmessage-length=0",
+					"-fno-strict-aliasing",
+					"-fdiagnostics-print-source-range-info",
+					"-fdiagnostics-show-category=id",
+					"-fdiagnostics-parseable-fixits",
+					"-fpascal-strings",
+					"-fblocks",
+					"-fvisibility=hidden",
+					"-MMD",
+					"-MT",
+					"-fno-exceptions",
+					"-Wno-ambiguous-macro",
+					"-Wall",
+					"-Werror=return-type",
+					"-DPTRCALL_ENABLED",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-fcxx-modules",
+					"-gdwarf-2",
+					"-O0",
+					"-DDEBUG_MEMORY_ALLOC",
+					"-DDISABLE_FORCED_INLINE",
+					"-D_DEBUG",
+					"-DDEBUG=1",
+					"-DDEBUG_ENABLED",
+					"-DVERSION_4_0",
+					"-DIOS_ENABLED",
+					"-DNEED_LONG_INT",
+					"-DLIBYUV_DISABLE_NEON",
+					"-DIPHONE_ENABLED",
+					"-DUNIX_ENABLED",
+					"-DCOREAUDIO_ENABLED",
+					"-isystem $(SRCROOT)/godot",
+					"-isystem $(SRCROOT)/godot/drivers/apple_embedded",
+					"-isystem $(SRCROOT)/godot/platform/ios",
 				);
 				OTHER_LDFLAGS = (
-					"$(inherited)",
 					"-ObjC",
+					"-framework",
+					os,
+					"-lswiftCore",
+					"-lswiftDispatch",
+					"-lswiftObjectiveC",
+					"-lswiftUIKit",
+					"-lswiftFoundation",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "deeplink/deeplink_plugin-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		90CAAA9F24E71FF10013969F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0CAB0568EEE793F12864ABE /* Pods-DeeplinkPlugin.release.xcconfig */;
+			baseConfigurationReference = 1A3D1E30D9DC57319C20B62B /* Pods-deeplink_plugin.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				HEADER_SEARCH_PATHS = (
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/godot",
-					"$(SRCROOT)/godot/main",
-					"$(SRCROOT)/godot/core",
-					"$(SRCROOT)/godot/core/os",
-					"$(SRCROOT)/godot/servers",
-					"$(SRCROOT)/godot/platform",
-					"$(SRCROOT)/godot/platform/ios",
-					"$(SRCROOT)/godot/modules",
-					"$(SRCROOT)/godot/scene",
-					"$(SRCROOT)/godot/drivers",
-					"$(SRCROOT)/godot/trirdparty",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -364,15 +414,55 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = (
-					"-fcxx-modules",
 					"-fmodules",
+					"-fobjc-arc",
+					"-fmessage-length=0",
+					"-fno-strict-aliasing",
+					"-fdiagnostics-print-source-range-info",
+					"-fdiagnostics-show-category=id",
+					"-fdiagnostics-parseable-fixits",
+					"-fpascal-strings",
+					"-fblocks",
+					"-fvisibility=hidden",
+					"-MMD",
+					"-MT",
+					"-fno-exceptions",
+					"-Wno-ambiguous-macro",
+					"-Wall",
+					"-Werror=return-type",
+					"-DPTRCALL_ENABLED",
+				);
+				OTHER_CPLUSPLUSFLAGS = (
+					"-fcxx-modules",
+					"-O2",
+					"-ftree-vectorize",
+					"-DNDEBUG",
+					"-DNS_BLOCK_ASSERTIONS=1",
+					"-DVERSION_4_0",
+					"-DIOS_ENABLED",
+					"-DNEED_LONG_INT",
+					"-DLIBYUV_DISABLE_NEON",
+					"-DIPHONE_ENABLED",
+					"-DUNIX_ENABLED",
+					"-DCOREAUDIO_ENABLED",
+					"-isystem $(SRCROOT)/godot",
+					"-isystem $(SRCROOT)/godot/drivers/apple_embedded",
+					"-isystem $(SRCROOT)/godot/platform/ios",
 				);
 				OTHER_LDFLAGS = (
-					"$(inherited)",
 					"-ObjC",
+					"-framework",
+					os,
+					"-lswiftCore",
+					"-lswiftDispatch",
+					"-lswiftObjectiveC",
+					"-lswiftUIKit",
+					"-lswiftFoundation",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "deeplink/deeplink_plugin-Bridging-Header.h";
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -380,7 +470,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		90CAAA8F24E71FF10013969F /* Build configuration list for PBXProject "DeeplinkPlugin" */ = {
+		90CAAA8F24E71FF10013969F /* Build configuration list for PBXProject "deeplink_plugin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				90CAAA9B24E71FF10013969F /* Debug */,
@@ -389,7 +479,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		90CAAA9D24E71FF10013969F /* Build configuration list for PBXNativeTarget "DeeplinkPlugin" */ = {
+		90CAAA9D24E71FF10013969F /* Build configuration list for PBXNativeTarget "deeplink_plugin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				90CAAA9E24E71FF10013969F /* Debug */,
