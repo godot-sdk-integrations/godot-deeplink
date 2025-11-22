@@ -193,16 +193,16 @@ class IosExportPlugin extends EditorExportPlugin:
 
 		# Add custom schemes to pList
 		if not __custom_schemes.is_empty():
-			add_ios_plist_content(CUSTOM_SCHEME_PLIST_ENTRY % [get_option("application/bundle_identifier"), __custom_schemes])
+			add_apple_embedded_platform_plist_content(CUSTOM_SCHEME_PLIST_ENTRY % [get_option("application/bundle_identifier"), __custom_schemes])
 
 		for __framework in IOS_FRAMEWORKS:
-			add_ios_framework(__framework)
+			add_apple_embedded_platform_framework(__framework)
 
 		for __framework in IOS_EMBEDDED_FRAMEWORKS:
-			add_ios_embedded_framework(__framework)
+			add_apple_embedded_platform_embedded_framework(__framework)
 
 		for __flag in IOS_LINKER_FLAGS:
-			add_ios_linker_flags(__flag)
+			add_apple_embedded_platform_linker_flags(__flag)
 
 
 	func _export_end() -> void:
