@@ -11,16 +11,43 @@ const PLUGIN_SINGLETON_NAME: String = "@pluginName@"
 
 const DEEPLINK_RECEIVED_SIGNAL_NAME = "deeplink_received"
 
-@export_category("Link")
-@export var label: String = ""
-@export var is_auto_verify: bool = true
-@export_category("Link Category")
-@export var is_default: bool = true
-@export var is_browsable: bool = true
-@export_category("Link Data")
+@export_category("Details")
+## The part of the URL that identifies the protocol and the specific app to open, such as 'http' or a custom
+## scheme like 'myapp'. It tells the operating system which application is responsible for handling the link and
+## launching it, often leading to a specific screen or function within the app.
 @export var scheme: String = "https"
+
+## The host is the domain name of the server that provides the linked content, for example, example.com in
+## https://example.com/app-page. It identifies the website or service the deeplink is connected to, allowing a
+## device to route the user to the correct app.
 @export var host: String = ""
+
+## A path prefix in a deeplink is a specific part of a URL that is used to map a web link to a particular
+## activity or screen within an app. For example, a path prefix like /recipe would route any URL with that
+## prefix, such as http://www.recipe-app.com/recipe/grilled-potato-salad, directly to the recipe viewing screen
+## for the specified recipe in the app instead of the website. 
 @export var path_prefix: String = ""
+
+@export_category("Android-specific")
+@export_group("Intent")
+## In Android, the android:label attribute within an <intent-filter> element serves to provide a user-readable
+## label for the capabilities described by that specific intent filter. This label is displayed to the user
+## when the activity is presented as an option to handle an intent that matches the filter.
+@export var label: String = ""
+
+## The android:autoVerify="true" attribute in an Android intent-filter is a crucial component for implementing
+## Android App Links. It signals to the Android system that the app should be automatically verified as the
+## default handler for specific web domains and schemes defined within the intent filter.
+@export var is_auto_verify: bool = true
+
+@export_group("Intent Category")
+## The android.intent.category.DEFAULT category in an Android intent-filter indicates that the activity
+## can be the target of an implicit intent when no other specific category is explicitly declared in the intent.
+@export var is_default: bool = true
+
+## The android.intent.category.BROWSABLE category in an Android intent-filter signifies that the target
+## activity can be safely launched by a web browser or other applications that handle web links.
+@export var is_browsable: bool = true
 
 var _plugin_singleton: Object
 
