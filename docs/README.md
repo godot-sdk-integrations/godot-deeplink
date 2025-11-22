@@ -57,14 +57,15 @@ If using both Android & iOS, ensure **same addon interface version**.
 ## <img src="../addon/icon.png" width="20"> Usage
 - Add `Deeplink` nodes to your scene per URL association and follow the following steps:
 	- set the required field on each `Deeplink` node
-		- `scheme`
-		- `host`
-		- `path prefix`
+		- `scheme` - schemes like `http`, `https`, or a custom scheme (don't include `://`)
+		- `host` - domain name
+		- `path prefix` - optional path before link is considered a deeplink
 	- note that `scheme`, `host`, and `path prefix` must all match for a URI to be processed by the app
 		- leave `path prefix` empty to process all paths in `host`
 - register a listener for the `deeplink_received` signal
 	- process `url`, `scheme`, `host`, and `path` data from the signal
 - invoke the `initialize()` method at startup
+  - `initialize()` plugin and connect its signals as early as possible (ie. in `_ready()` lifecycle method of your main node)
 - alternatively, use the following methods to get most recent deeplink data:
 	- `get_link_url()` -> full URL for the deeplink
 	- `get_link_scheme()` -> scheme for the deeplink (ie. 'https')
@@ -72,6 +73,7 @@ If using both Android & iOS, ensure **same addon interface version**.
 	- `get_link_path()` -> path for the deeplink (the part that comes after host)
 - additional methods:
 	- `is_domain_associated(a_domain: String)` -> returns true if your application is correctly associated with the given domain on the tested device
+    	- _note: `is_domain_associated()` method does not support custom schemes_
 	- `navigate_to_open_by_default_settings()` -> navigates to the Android OS' `Open by Default` settings screen for your application
 	
 	---
@@ -80,7 +82,7 @@ If using both Android & iOS, ensure **same addon interface version**.
 
 ## <img src="../addon/icon.png" width="20"> Signals
 
-- `deeplink_received(url: DeeplinkUrl)`: Emitted when app content is requested via deeplink.
+- `deeplink_received(url: DeeplinkUrl)`: Emitted when app content is requested via deeplink. Must be connected at startup, as early as possible, or via Godot Editor.
 
 ---
 
@@ -123,11 +125,11 @@ path_prefix = "/my_data"
 ```
 
 2. **Node-based Export Configuration**
-If `export.cfg` file is not found or file-based configuration fails, then the plugin will attempt to load node-based configuration.
+If `export.cfg` file is not found or file-based configuration is invalid, then the plugin will attempt to load node-based configuration.
 
 During iOS export, the plugin searches for `Deeplink` nodes in the scene that is open in the Godot Editor. If none found, then the plugin searches for `Deeplink` nodes in the project's main scene. Therefore; 
 - Make sure that the scene that contains the `Deeplink` node(s) is selected in the Godot Editor when building and exporting for Android, or
-- Make sure that your Godot project's main scene contains an `Deeplink` node(s).
+- Make sure that your Godot project's main scene contains one or more `Deeplink` nodes.
 
 ---
 
@@ -138,6 +140,7 @@ During iOS export, the plugin searches for `Deeplink` nodes in the scene that is
 ### Android
 - **Build:** [Create custom Android gradle build](https://docs.godotengine.org/en/stable/tutorials/export/android_gradle_build.html).
 - **Domain Association:** [Associate Godot app with a domain](https://developer.android.com/studio/write/app-link-indexing#associatesite).
+- **Custom schemes:** Chrome has issues opening custom schemes; Firefox is able to open them successfully.
 - **Testing:**
   1. Use `adb shell` as follows:
 	- `$> adb shell am start -a android.intent.action.VIEW -c android.intent.category.BROWSABLE -d "https://www.example.com/mydata/path"`
