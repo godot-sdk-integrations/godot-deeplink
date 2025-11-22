@@ -26,6 +26,8 @@ do_build_ios=false
 gradle_build_task="assembleDebug"
 do_create_archive=false
 do_create_multiplatform_archive=false
+do_uninstall=false
+do_install=false
 do_full_release=false
 
 
@@ -40,7 +42,9 @@ function display_help()
 	echo
 	$SCRIPT_DIR/echocolor.sh -Y "Options:"
 	echo_yellow "	a	build plugin for the Android platform"
-	echo_yellow "	c	remove any existing plugin build"
+	echo_yellow "	c	remove existing Android build"
+	echo_yellow "	d	uninstall plugin from demo app"
+	echo_yellow "	D	install plugin to demo app"
 	echo_yellow "	h	display usage information"
 	echo_yellow "	i	build plugin for the iOS platform"
 	echo_yellow "	r	build Android plugin with release build variant"
@@ -134,12 +138,16 @@ function run_ios_build()
 {
 	local build_arguments="$1"
 
+	display_step "Running iOS build script with opts: $build_arguments"
+
 	$SCRIPT_DIR/build_ios.sh "$build_arguments"
 }
 
 
 function create_multi_platform_archive()
 {
+	display_step "Creating multi-platform release archive"
+
 	if [[ -d "$DEMO_DIR" ]]
 	then
 		if [[ ! -d "$DEST_DIR" ]]
@@ -189,7 +197,43 @@ function create_multi_platform_archive()
 }
 
 
-while getopts "achirRzZ" option; do
+function uninstall_plugin_from_demo()
+{
+	display_status "Uninstalling plugin from demo app"
+	if [[ -d "$DEMO_DIR/addons/$PLUGIN_NAME" ]]; then
+		echo_yellow "Removing $DEMO_DIR/addons/$PLUGIN_NAME"
+		rm -rf $DEMO_DIR/addons/$PLUGIN_NAME
+	fi
+
+	if [[ -d "$DEMO_DIR/ios/plugins/$PLUGIN_NAME.debug.xcframework" ]]; then
+		echo_yellow "Removing $DEMO_DIR/ios/plugins/$PLUGIN_NAME.debug.xcframework"
+		rm -rf $DEMO_DIR/ios/plugins/$PLUGIN_NAME.debug.xcframework
+	fi
+
+	if [[ -d "$DEMO_DIR/ios/plugins/$PLUGIN_NAME.release.xcframework" ]]; then
+		echo_yellow "Removing $DEMO_DIR/ios/plugins/$PLUGIN_NAME.release.xcframework"
+		rm -rf $DEMO_DIR/ios/plugins/$PLUGIN_NAME.release.xcframework
+	fi
+
+	if [[ -f "$DEMO_DIR/ios/plugins/$PLUGIN_NAME.gdip" ]]; then
+		echo_yellow "Removing $DEMO_DIR/ios/plugins/$PLUGIN_NAME.gdip"
+		rm -rf $DEMO_DIR/ios/plugins/$PLUGIN_NAME.gdip
+	fi
+}
+
+
+function install_plugin_to_demo()
+{
+	display_status "Installing plugin to demo app"
+	if [[ -f "$IOS_DIR/build/release/$PLUGIN_NAME-iOS-v$PLUGIN_VERSION.zip" ]]; then
+		$SCRIPT_DIR/install.sh -t $DEMO_DIR -z $IOS_DIR/build/release/$PLUGIN_NAME-iOS-v$PLUGIN_VERSION.zip
+	else
+		display_error "Error: Cannot install to demo. '$IOS_DIR/build/release/$PLUGIN_NAME-iOS-v$PLUGIN_VERSION.zip' not found!"
+	fi
+}
+
+
+while getopts "acdDhirRzZ" option; do
 	case $option in
 		h)
 			display_help
@@ -199,6 +243,12 @@ while getopts "achirRzZ" option; do
 			;;
 		c)
 			do_clean=true
+			;;
+		d)
+			do_uninstall=true
+			;;
+		D)
+			do_install=true
 			;;
 		i)
 			do_build_ios=true
@@ -228,6 +278,11 @@ done
 shift $((OPTIND - 1))
 
 
+if [[ "$do_uninstall" == true ]]
+then
+	uninstall_plugin_from_demo
+fi
+
 if [[ "$do_clean" == true ]]
 then
 	display_status "Cleaning build"
@@ -248,7 +303,6 @@ fi
 
 if [[ "$do_build_ios" == true ]]
 then
-	display_status "Running iOS build script with args: $@"
 	run_ios_build "$@"
 fi
 
@@ -260,19 +314,19 @@ fi
 
 if [[ "$do_full_release" == true ]]
 then
+	uninstall_plugin_from_demo
+
 	display_status "Creating all archives"
 	run_android_gradle_task "assembleDebug"
 	run_android_gradle_task "assembleRelease"
 	run_android_gradle_task "packageDistribution"
 
-	display_step "Running iOS build script with args: -cHPbz"
-	run_ios_build "-cHPbz"
+	run_ios_build -cHpPbz
 
-	display_step "Installing iOS plugin in demo app"
-	$SCRIPT_DIR/install.sh -t $DEMO_DIR -z $ROOT_DIR/ios/build/release/$PLUGIN_NAME-iOS-v$PLUGIN_VERSION.zip
+	install_plugin_to_demo
 
 	rm -rf $DEST_DIR
-	display_step "Creating multi-platform release archive"
+
 	create_multi_platform_archive
 
 	display_step "Copying Android release archive"
@@ -280,4 +334,10 @@ then
 
 	display_step "Copying iOS release archive"
 	cp $ROOT_DIR/ios/build/release/$PLUGIN_NAME-iOS-v$PLUGIN_VERSION.zip $DEST_DIR
+fi
+
+
+if [[ "$do_install" == true ]]
+then
+	install_plugin_to_demo
 fi
