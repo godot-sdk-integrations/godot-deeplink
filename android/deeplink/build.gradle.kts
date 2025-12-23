@@ -79,7 +79,12 @@ tasks {
 	}
 
 	register<Delete>("cleanDemoAddons") {
-		delete("${project.extra["demoAddOnsDirectory"]}/${project.extra["pluginName"]}")
+		// Keep the directory itself and delete everything inside except for .uid and .import files
+		delete(fileTree("${project.extra["demoAddOnsDirectory"]}/${project.extra["pluginName"]}").apply {
+			include("**/*")
+			exclude("**/*.uid")
+			exclude("**/*.import")
+		})
 	}
 
 	register<Copy>("copyPngsToDemo") {
@@ -92,12 +97,19 @@ tasks {
 	register<Copy>("copyAddonsToDemo") {
 		description = "Copies the export scripts templates to the plugin's addons directory"
 		dependsOn("cleanDemoAddons")
-		finalizedBy("copyDebugAARToDemoAddons", "copyReleaseAARToDemoAddons", "copyPngsToDemo")
+		finalizedBy(
+			"copyDebugAARToDemoAddons",
+			"copyReleaseAARToDemoAddons",
+			"copyPngsToDemo"
+		)
 
 		from(project.extra["templateDirectory"] as String)
 		into("${project.extra["demoAddOnsDirectory"]}/${project.extra["pluginName"]}")
+
 		include("**/*.gd")
 		include("**/*.cfg")
+
+		// First pass: explicit tokens
 		filter<ReplaceTokens>("tokens" to mapOf(
 			"pluginName" to (project.extra["pluginName"] as String),
 			"pluginNodeName" to (project.extra["pluginNodeName"] as String),
@@ -121,6 +133,20 @@ tasks {
 				.filter { it.isNotBlank() }
 				.joinToString(", ") { "\"$it\"" }
 		))
+
+		// Second pass: generic replacement for leftover tokens (ie. extraProperties)
+		filter { line: String ->
+			var result = line
+
+			project.extra.properties.forEach { (key, value) ->
+				val token = "@$key@"
+				if (result.contains(token)) {
+					result = result.replace(token, value.toString())
+				}
+			}
+
+			result
+		}
 	}
 
 	register<de.undercouch.gradle.tasks.download.Download>("downloadGodotAar") {
@@ -152,13 +178,20 @@ tasks {
 	}
 
 	register<Zip>("packageDistribution") {
-		archiveFileName.set("${project.extra["pluginArchive"]}")
+		archiveFileName.set(project.extra["pluginArchive"] as String)
 		destinationDirectory.set(layout.buildDirectory.dir("dist"))
+
 		exclude("**/*.uid")
 		exclude("**/*.import")
+
 		from("${project.extra["demoAddOnsDirectory"]}/${project.extra["pluginName"]}") {
-			into("${project.extra["pluginName"]}-root/addons/${project.extra["pluginName"]}")
+			includeEmptyDirs = false
+
+			eachFile {
+				path = "addons/${project.extra["pluginName"]}/$path"
+			}
 		}
+
 		doLast {
 			println("Zip archive created at: ${archiveFile.get().asFile.path}")
 		}

@@ -39,7 +39,7 @@ class AndroidExportPlugin extends EditorExportPlugin:
 
 	const DEEPLINK_ACTIVITY_FORMAT = """
 		<activity
-			android:name="org.godotengine.plugin.android.deeplink.DeeplinkActivity"
+			android:name="@activityClass@"
 			android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
 			android:excludeFromRecents="true"
 			android:launchMode="singleTask"

@@ -4,7 +4,8 @@
 
 #import "godot_app_delegate.h"
 #import "deeplink_service.h"
-#import "deeplink_plugin_implementation.h"
+#import "deeplink_plugin.h"
+#import "deeplink_logger.h"
 #import "gdp_converter.h"
 
 
@@ -33,21 +34,20 @@ static DeeplinkServiceInitializer initializer;
 }
 
 - (BOOL) application:(UIApplication*) app openURL:(NSURL*) url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id>*) options {
-	DeeplinkPlugin::receivedUrl = url;
-
 	if (url) {
+		DeeplinkPlugin::receivedUrl = [[DeeplinkUrl alloc] initWithNsUrl:url];
+
 		// Check if the URL is a custom scheme (not http or https)
 		BOOL isCustomScheme = ![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"];
-		NSLog(@"Deeplink plugin: %@ URL received: %@", isCustomScheme ? @"Custom scheme" : @"Universal Link", url.absoluteString);
+		os_log_debug(deeplink_log, "Deeplink plugin: %@ URL received: %@", isCustomScheme ? @"Custom scheme" : @"Universal Link", url.absoluteString);
 
 		DeeplinkPlugin* plugin = DeeplinkPlugin::get_singleton();
 		if (plugin) {
-			Dictionary urlData = [GDPConverter nsUrlToGodotDictionary:url];
-			plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, urlData);
+			plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, [DeeplinkPlugin::receivedUrl buildRawData]);
 		}
 	}
 	else {
-		NSLog(@"Deeplink plugin: URL is empty!");
+		os_log_debug(deeplink_log, "Deeplink plugin: URL is empty!");
 	}
 
 	return YES;
@@ -56,14 +56,13 @@ static DeeplinkServiceInitializer initializer;
 - (BOOL) application:(UIApplication*) app continueUserActivity:(NSUserActivity*) userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>>* restorableObjects)) restorationHandler {
 	if ([userActivity.activityType isEqualToString: NSUserActivityTypeBrowsingWeb]) {
 		NSURL* url = userActivity.webpageURL;
-		DeeplinkPlugin::receivedUrl = url;
+		DeeplinkPlugin::receivedUrl = [[DeeplinkUrl alloc] initWithNsUrl:url];
 		
-		NSLog(@"Deeplink plugin: Universal Link received at app resumption: %@", url.absoluteString);
+		os_log_debug(deeplink_log, "Deeplink plugin: Universal Link received at app resumption: %@", url.absoluteString);
 
 		DeeplinkPlugin* plugin = DeeplinkPlugin::get_singleton();
 		if (plugin) {
-			Dictionary urlData = [GDPConverter nsUrlToGodotDictionary:url];
-			plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, urlData);
+			plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, [DeeplinkPlugin::receivedUrl buildRawData]);
 		}
 	}
 
@@ -75,65 +74,62 @@ static DeeplinkServiceInitializer initializer;
 		NSURL *url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
 		if (url) {
 			BOOL isCustomScheme = ![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"];
-			NSLog(@"Deeplink plugin: %@ received at startup: %@", isCustomScheme ? @"Custom scheme URL" : @"Universal Link", url.absoluteString);
-			DeeplinkPlugin::receivedUrl = url;
+			os_log_debug(deeplink_log, "Deeplink plugin: %@ received at startup: %@", isCustomScheme ? @"Custom scheme URL" : @"Universal Link", url.absoluteString);
+			DeeplinkPlugin::receivedUrl = [[DeeplinkUrl alloc] initWithNsUrl:url];
 
 			DeeplinkPlugin* plugin = DeeplinkPlugin::get_singleton();
 			if (plugin) {
-				Dictionary urlData = [GDPConverter nsUrlToGodotDictionary:url];
-				plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, urlData);
+				plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, [DeeplinkPlugin::receivedUrl buildRawData]);
 			}
 		}
 		else {
-			NSLog(@"Deeplink plugin: UIApplicationLaunchOptionsURLKey is empty!");
+			os_log_debug(deeplink_log, "Deeplink plugin: UIApplicationLaunchOptionsURLKey is empty!");
 
 			NSDictionary* userActivityDict = [launchOptions objectForKey:UIApplicationLaunchOptionsUserActivityDictionaryKey];
 			if (userActivityDict) {
 				url = [userActivityDict objectForKey:UIApplicationLaunchOptionsURLKey];
 				if (url) {
 					BOOL isCustomScheme = ![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"];
-					NSLog(@"Deeplink plugin: %@ received at startup from user activity dictionary: %@", isCustomScheme ? @"Custom scheme URL" : @"Universal Link", url.absoluteString);
-					DeeplinkPlugin::receivedUrl = url;
+					os_log_debug(deeplink_log, "Deeplink plugin: %@ received at startup from user activity dictionary: %@", isCustomScheme ? @"Custom scheme URL" : @"Universal Link", url.absoluteString);
+					DeeplinkPlugin::receivedUrl = [[DeeplinkUrl alloc] initWithNsUrl:url];
 
 					DeeplinkPlugin* plugin = DeeplinkPlugin::get_singleton();
 					if (plugin) {
-						Dictionary urlData = [GDPConverter nsUrlToGodotDictionary:url];
-						plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, urlData);
+						plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, [DeeplinkPlugin::receivedUrl buildRawData]);
 					}
 				}
 				else {
-					NSLog(@"Deeplink plugin: UIApplicationLaunchOptionsURLKey is empty in user activity dictionary!");
+					os_log_debug(deeplink_log, "Deeplink plugin: UIApplicationLaunchOptionsURLKey is empty in user activity dictionary!");
 					
 					NSUserActivity* userActivity = [userActivityDict objectForKey:@"UIApplicationLaunchOptionsUserActivityKey"];
 					if (userActivity) {
 						if ([userActivity.activityType isEqualToString: NSUserActivityTypeBrowsingWeb]) {
 							url = userActivity.webpageURL;
-							DeeplinkPlugin::receivedUrl = url;
+							DeeplinkPlugin::receivedUrl = [[DeeplinkUrl alloc] initWithNsUrl:url];
 							
-							NSLog(@"Deeplink plugin: Universal Link received at app startup from user activity: %@", url.absoluteString);
+							os_log_debug(deeplink_log, "Deeplink plugin: Universal Link received at app startup from user activity: %@", url.absoluteString);
 
 							DeeplinkPlugin* plugin = DeeplinkPlugin::get_singleton();
 							if (plugin) {
-								Dictionary urlData = [GDPConverter nsUrlToGodotDictionary:url];
-								plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, urlData);
+								plugin->emit_signal(DEEPLINK_RECEIVED_SIGNAL, [DeeplinkPlugin::receivedUrl buildRawData]);
 							}
 						}
 						else {
-							NSLog(@"Deeplink plugin: activity type is %@", userActivity.activityType);
+							os_log_debug(deeplink_log, "Deeplink plugin: activity type is %@", userActivity.activityType);
 						}
 					}
 					else {
-						NSLog(@"Deeplink plugin: No user activity in user activity dictionary!");
+						os_log_debug(deeplink_log, "Deeplink plugin: No user activity in user activity dictionary!");
 					}
 				}
 			}
 			else {
-				NSLog(@"Deeplink plugin: No user activity dictionary either!");
+				os_log_debug(deeplink_log, "Deeplink plugin: No user activity dictionary either!");
 			}
 		}
 	}
 	else {
-		NSLog(@"Deeplink plugin: launch options is empty!");
+		os_log_debug(deeplink_log, "Deeplink plugin: launch options is empty!");
 	}
 
 	return YES;

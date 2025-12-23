@@ -153,12 +153,12 @@ func _null_check(a_value) -> String:
 
 
 static func log_error(a_description: String) -> void:
-	push_error(a_description)
+	push_error("%s: %s" % [PLUGIN_SINGLETON_NAME, a_description])
 
 
 static func log_warn(a_description: String) -> void:
-	push_warning(a_description)
+	push_warning("%s: %s" % [PLUGIN_SINGLETON_NAME, a_description])
 
 
 static func log_info(a_description: String) -> void:
-	print_rich("[color=purple]INFO: %s[/color]" % a_description)
+	print_rich("[color=purple]%s: INFO: %s[/color]" % [PLUGIN_SINGLETON_NAME, a_description])

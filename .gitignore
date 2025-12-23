@@ -8,16 +8,24 @@
 
 # Project-specific
 build/
-demo/addons
+demo/addons/*Plugin/**
+!demo/addons/*Plugin/
+!demo/addons/*Plugin/**/
+!demo/addons/*Plugin/**/*.import
+!demo/addons/*Plugin/**/*.uid
 demo/android
 demo/ios
+demo/assets/*Plugin
+demo/assets/splash_screens/*
+!demo/assets/splash_screens/*.png
+demo/assets/store_icons/*
+!demo/assets/store_icons/*.png
 ios/godot/
 release/
 
 # Godot-specific
-demo/.godot/*
-!demo/.godot/uid_cache.bin
 .import/
+.godot/
 
 # Android-specific
 .gradle/

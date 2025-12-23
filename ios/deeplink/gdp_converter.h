@@ -16,8 +16,9 @@
 
 // To Godot
 + (String) nsStringToGodotString:(NSString*) nsString;
++ (Variant)nsNumberToGodotVariant:(NSNumber *)number;
++ (Array)nsArrayToGodotArray:(NSArray *)nsArray;
 + (Dictionary) nsDictionaryToGodotDictionary:(NSDictionary*) nsDictionary;
-+ (Dictionary) nsUrlToGodotDictionary:(NSURL*) status;
 
 @end
 

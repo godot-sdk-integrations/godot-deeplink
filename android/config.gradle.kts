@@ -17,7 +17,7 @@ extra.apply {
 	// Plugin details
 	set("pluginNodeName", commonProperties.getProperty("pluginNodeName"))
 	set("pluginName", "${get("pluginNodeName")}Plugin")
-	set("pluginPackageName", "org.godotengine.plugin.android.deeplink")
+	set("pluginPackageName", "org.godotengine.plugin.deeplink")
 	set("pluginVersion", commonProperties.getProperty("pluginVersion"))
 	set("pluginArchive", "${get("pluginName")}-Android-v${get("pluginVersion")}.zip")
 
@@ -26,6 +26,20 @@ extra.apply {
 	set("releaseType", commonProperties.getProperty("godotReleaseType"))
 	set("godotAarUrl", "https://github.com/godotengine/godot-builds/releases/download/${get("godotVersion")}-${get("releaseType")}/godot-lib.${get("godotVersion")}.${get("releaseType")}.template_release.aar")
 	set("godotAarFile", "godot-lib-${get("godotVersion")}.${get("releaseType")}.aar")
+
+	// Parse extraProperties as "key:value,key:value,..."
+	val extraPropsString = commonProperties.getProperty("extraProperties") ?: ""
+	val extraPropsMap = extraPropsString
+		.split(",")
+		.mapNotNull { entry ->
+			val parts = entry.split(":")
+			if (parts.size == 2) parts[0] to parts[1] else null
+		}
+		.toMap()
+
+	extraPropsMap.forEach { (key, value) ->
+		set(key, value)
+	}
 
 	// Demo
 	set("demoAddOnsDirectory", "../../demo/addons")
