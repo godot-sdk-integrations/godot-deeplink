@@ -2,7 +2,7 @@
 // © 2024-present https://github.com/cengiz-pz
 //
 
-package org.godotengine.plugin.android.deeplink;
+package org.godotengine.plugin.deeplink;
 
 import android.app.Activity;
 import android.content.Intent;

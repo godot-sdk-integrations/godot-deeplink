@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cbngbohjs4thb"]
 
 [ext_resource type="Script" uid="uid://bvnnasa716p82" path="res://Main.gd" id="1_6m677"]
-[ext_resource type="Script" uid="uid://cqphbbsadvgya" path="res://addons/DeeplinkPlugin/Deeplink.gd" id="2_4jmv3"]
+[ext_resource type="Script" uid="uid://u8nbtrhtxa3l" path="res://addons/DeeplinkPlugin/Deeplink.gd" id="2_4jmv3"]
 [ext_resource type="Texture2D" uid="uid://h27catmxp2hf" path="res://assets/deeplink-android.png" id="2_ym6q2"]
 [ext_resource type="Texture2D" uid="uid://cf7vmysob0pff" path="res://assets/deeplink-ios.png" id="3_cm0pq"]
 
@@ -71,9 +71,8 @@ path_prefix = "/mydata"
 
 [node name="TestCustomSchemeDeeplink" type="Node" parent="Deeplink"]
 script = ExtResource("2_4jmv3")
-label = "mytest"
 scheme = "mytest"
-metadata/_custom_type_script = "uid://cqphbbsadvgya"
+label = "mytest"
 
 [connection signal="pressed" from="CanvasLayer/CenterContainer/VBoxContainer/VBoxContainer/IsAssociatedButton" to="." method="_on_is_associated_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/CenterContainer/VBoxContainer/VBoxContainer/NavigateButton" to="." method="_on_navigate_button_pressed"]

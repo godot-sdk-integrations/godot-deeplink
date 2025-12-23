@@ -16,63 +16,85 @@
 	return [nsString UTF8String];
 }
 
-+ (Dictionary) nsDictionaryToGodotDictionary:(NSDictionary*) nsDictionary {
-	Dictionary dictionary = Dictionary();
 
-	for (NSObject* keyObject in [nsDictionary allKeys]) {
-		if (keyObject && [keyObject isKindOfClass:[NSString class]]) {
-			NSString* key = (NSString*) keyObject;
++ (Dictionary)nsDictionaryToGodotDictionary:(NSDictionary *)nsDictionary {
+	Dictionary dictionary;
 
-			NSObject* valueObject = [nsDictionary objectForKey:key];
-			if (valueObject) {
-				if ([valueObject isKindOfClass:[NSString class]]) {
-					NSString* value = (NSString*) valueObject;
-					dictionary[[key UTF8String]] = (value) ? [value UTF8String] : "";
-				}
-				else if ([valueObject isKindOfClass:[NSNumber class]]) {
-					NSNumber* value = (NSNumber*) valueObject;
-					if (strcmp([value objCType], @encode(BOOL)) == 0) {
-						dictionary[[key UTF8String]] = (int) [value boolValue];
-					} else if (strcmp([value objCType], @encode(char)) == 0) {
-						dictionary[[key UTF8String]] = (int) [value charValue];
-					} else if (strcmp([value objCType], @encode(int)) == 0) {
-						dictionary[[key UTF8String]] = [value intValue];
-					} else if (strcmp([value objCType], @encode(unsigned int)) == 0) {
-						dictionary[[key UTF8String]] = (int) [value unsignedIntValue];
-					} else if (strcmp([value objCType], @encode(long long)) == 0) {
-						dictionary[[key UTF8String]] = (int) [value longValue];
-					} else if (strcmp([value objCType], @encode(float)) == 0) {
-						dictionary[[key UTF8String]] = [value floatValue];
-					} else if (strcmp([value objCType], @encode(double)) == 0) {
-						dictionary[[key UTF8String]] = (float) [value doubleValue];
-					}
-				}
-				else if ([valueObject isKindOfClass:[NSDictionary class]]) {
-					NSDictionary* value = (NSDictionary*) valueObject;
-					dictionary[[key UTF8String]] = [GDPConverter nsDictionaryToGodotDictionary:value];
-				}
-			}
+	for (NSObject *keyObject in nsDictionary) {
+		if (![keyObject isKindOfClass:[NSString class]]) {
+			continue;
+		}
+
+		NSString *key = (NSString *)keyObject;
+		NSObject *valueObject = nsDictionary[key];
+		if (!valueObject) {
+			continue;
+		}
+
+		const char *godotKey = [key UTF8String];
+
+		if ([valueObject isKindOfClass:[NSString class]]) {
+			dictionary[godotKey] = [(NSString *)valueObject UTF8String];
+		}
+		else if ([valueObject isKindOfClass:[NSNumber class]]) {
+			dictionary[godotKey] =
+				[GDPConverter nsNumberToGodotVariant:(NSNumber *)valueObject];
+		}
+		else if ([valueObject isKindOfClass:[NSDictionary class]]) {
+			dictionary[godotKey] =
+				[GDPConverter nsDictionaryToGodotDictionary:(NSDictionary *)valueObject];
+		}
+		else if ([valueObject isKindOfClass:[NSArray class]]) {
+			dictionary[godotKey] =
+				[GDPConverter nsArrayToGodotArray:(NSArray *)valueObject];
 		}
 	}
 
 	return dictionary;
 }
 
-+ (Dictionary) nsUrlToGodotDictionary:(NSURL*) url {
-	Dictionary dictionary;
 
-	dictionary["scheme"] = [url.scheme UTF8String];
-	dictionary["user"] = [url.user UTF8String];
-	dictionary["password"] = [url.password UTF8String];
-	dictionary["host"] = [url.host UTF8String];
-	dictionary["port"] = [url.port intValue];
-	dictionary["path"] = [url.path UTF8String];
-	dictionary["pathExtension"] = [url.pathExtension UTF8String];
-	dictionary["pathComponents"] = url.pathComponents;
-	dictionary["query"] = [url.query UTF8String];
-	dictionary["fragment"] = [url.fragment UTF8String];
++ (Variant)nsNumberToGodotVariant:(NSNumber *)number {
+	const char *type = [number objCType];
 
-	return dictionary;
+	// Floating point
+	if (strcmp(type, @encode(float)) == 0 ||
+		strcmp(type, @encode(double)) == 0) {
+		return Variant([number doubleValue]);
+	}
+
+	// Integer / Boolean / Char / Long
+	return Variant((int64_t)[number longLongValue]);
+}
+
+
++ (Array)nsArrayToGodotArray:(NSArray *)nsArray {
+	Array godotArray;
+
+	for (NSObject *element in nsArray) {
+
+		if ([element isKindOfClass:[NSString class]]) {
+			godotArray.append([(NSString *)element UTF8String]);
+		}
+		else if ([element isKindOfClass:[NSNumber class]]) {
+			godotArray.append(
+				[GDPConverter nsNumberToGodotVariant:(NSNumber *)element]
+			);
+		}
+		else if ([element isKindOfClass:[NSDictionary class]]) {
+			godotArray.append(
+				[GDPConverter nsDictionaryToGodotDictionary:(NSDictionary *)element]
+			);
+		}
+		else if ([element isKindOfClass:[NSArray class]]) {
+			godotArray.append(
+				[GDPConverter nsArrayToGodotArray:(NSArray *)element]
+			);
+		}
+		// NSNull / unsupported types ignored
+	}
+
+	return godotArray;
 }
 
 @end
