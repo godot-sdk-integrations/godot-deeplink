@@ -71,7 +71,7 @@ func load_export_config_from_file() -> Error:
 	return __result
 
 
-func load_export_config_from_node() -> Error:
+func load_export_config_from_node(a_platform: Deeplink.Platform) -> Error:
 	Deeplink.log_info("Loading export config from node!")
 
 	var __result = OK
@@ -108,16 +108,17 @@ func load_export_config_from_node() -> Error:
 				PLUGIN_NODE_TYPE_NAME])
 
 	for __node in __deeplink_nodes:
-		var __deeplink_node = __node as Deeplink
-		deeplinks.append(
-			DeeplinkExportConfigItem.new()
-				.set_label(__deeplink_node.label)
-				.set_is_auto_verify(__deeplink_node.is_auto_verify)
-				.set_is_default(__deeplink_node.is_default)
-				.set_is_browsable(__deeplink_node.is_browsable)
-				.set_scheme(__deeplink_node.scheme)
-				.set_host(__deeplink_node.host)
-				.set_path_prefix(__deeplink_node.path_prefix)
+		var __deeplink_node: Deeplink = __node as Deeplink
+		if __deeplink_node.is_platform_enabled(a_platform):
+			deeplinks.append(
+				DeeplinkExportConfigItem.new()
+					.set_label(__deeplink_node.android_label)
+					.set_is_auto_verify(__deeplink_node.android_is_auto_verify)
+					.set_is_default(__deeplink_node.android_is_default)
+					.set_is_browsable(__deeplink_node.android_is_browsable)
+					.set_scheme(__deeplink_node.scheme)
+					.set_host(__deeplink_node.host)
+					.set_path_prefix(__deeplink_node.path_prefix)
 		)
 
 	print_loaded_config()

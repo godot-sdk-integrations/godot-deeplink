@@ -96,7 +96,7 @@ class AndroidExportPlugin extends EditorExportPlugin:
 	func _export_begin(features: PackedStringArray, is_debug: bool, path: String, flags: int) -> void:
 		_export_config = DeeplinkExportConfig.new()
 		if not _export_config.export_config_file_exists() or _export_config.load_export_config_from_file() != OK:
-			_export_config.load_export_config_from_node()
+			_export_config.load_export_config_from_node(Deeplink.Platform.Android)
 
 
 	func _get_android_dependencies(platform: EditorExportPlatform, debug: bool) -> PackedStringArray:
@@ -182,7 +182,7 @@ class IosExportPlugin extends EditorExportPlugin:
 
 		_export_config = DeeplinkExportConfig.new()
 		if not _export_config.export_config_file_exists() or _export_config.load_export_config_from_file() != OK:
-			_export_config.load_export_config_from_node()
+			_export_config.load_export_config_from_node(Deeplink.Platform.iOS)
 
 		# Compile a list of configured custom schemes
 		var __custom_schemes: String = ""

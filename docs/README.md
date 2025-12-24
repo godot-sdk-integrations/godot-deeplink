@@ -1,12 +1,12 @@
 <p align="center">
-	<img width="256" height="256" src="../demo/assets/deeplink-android.png">
+	<img width="256" height="256" src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/demo/assets/deeplink-android.png">
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	<img width="256" height="256" src="../demo/assets/deeplink-ios.png">
+	<img width="256" height="256" src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/demo/assets/deeplink-ios.png">
 </p>
 
 ---
 
-# <img src="../addon/icon.png" width="24"> Godot Deeplink Plugin
+# <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="24"> Godot Deeplink Plugin
 
 Deeplink plugin provides a unified GDScript interface for processing of App Links on the Android platform and Universal Links on the iOS platform in order to enable direct navigation to specific app content.
 
@@ -18,10 +18,12 @@ Deeplink plugin provides a unified GDScript interface for processing of App Link
 
 ---
 
-## <img src="../addon/icon.png" width="20"> Table of Contents
+## <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="20"> Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
 - [Signals](#signals)
+- [Methods](#methods)
+- [Classes](#classes)
 - [Export](#export)
 - [Platform-Specific Notes](#platform-specific-notes)
 - [Links](#links)
@@ -33,7 +35,7 @@ Deeplink plugin provides a unified GDScript interface for processing of App Link
 
 <a name="installation"></a>
 
-## <img src="../addon/icon.png" width="20"> Installation
+## <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="20"> Installation
 
 **Uninstall previous versions** before installing.
 If using both Android & iOS, ensure **same addon interface version**.
@@ -41,9 +43,9 @@ If using both Android & iOS, ensure **same addon interface version**.
 **Options:**
 1. **AssetLib**
 	- Search for `Deeplink`
-	- Click `Download` → `Install`
+	- Click `Download` --> `Install`
 	- Install to project root, `Ignore asset root` checked
-	- Enable via **Project → Project Settings → Plugins**
+	- Enable via **Project --> Project Settings --> Plugins**
 	- Ignore file conflict warnings when installing both versions
 2. **Manual**
 	- Download release from GitHub
@@ -54,7 +56,7 @@ If using both Android & iOS, ensure **same addon interface version**.
 
 <a name="usage"></a>
 
-## <img src="../addon/icon.png" width="20"> Usage
+## <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="20"> Usage
 - Add `Deeplink` nodes to your scene per URL association and follow the following steps:
 	- set the required field on each `Deeplink` node
 		- `scheme` - schemes like `http`, `https`, or a custom scheme (don't include `://`)
@@ -75,20 +77,138 @@ If using both Android & iOS, ensure **same addon interface version**.
 	- `is_domain_associated(a_domain: String)` -> returns true if your application is correctly associated with the given domain on the tested device
     	- _note: `is_domain_associated()` method does not support custom schemes_
 	- `navigate_to_open_by_default_settings()` -> navigates to the Android OS' `Open by Default` settings screen for your application
-	
-	---
+
+**Usage Example**:
+
+```
+extends Node
+
+@onready var deeplink: Deeplink = $Deeplink
+
+
+func _ready() -> void:
+	# Initialize the plugin as early as possible
+	deeplink.initialize()
+
+	# Connect the signal (can also be done in the editor)
+	deeplink.deeplink_received.connect(_on_deeplink_received)
+
+
+func _on_deeplink_received(url: DeeplinkUrl) -> void:
+	print("Full URL: ", url.get_url())
+	print("Scheme: ", url.get_scheme())
+	print("Host: ", url.get_host())
+	print("Path: ", url.get_path())
+	print("Query: ", url.get_query())
+```
+
+**Notes**:
+
+- `initialize()` should be called in the main scene’s `_ready()` method.
+- The `deeplink_received` signal is emitted only when the URL matches the configured `scheme`, `host`, and optional `path_prefix`.
+- Deeplink data is also accessible via `get_link_*()` methods on the Deeplink node.
+
+---
 
 <a name="signals"></a>
 
-## <img src="../addon/icon.png" width="20"> Signals
+## <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="20"> Signals
 
 - `deeplink_received(url: DeeplinkUrl)`: Emitted when app content is requested via deeplink. Must be connected at startup, as early as possible, or via Godot Editor.
 
 ---
 
+<a name="methods"></a>
+
+## <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="20"> Methods
+
+- `initialize() -> int`
+Initializes the native plugin and connects platform-specific listeners.
+Must be called as early as possible, ideally in _ready() of the main scene.
+
+- `navigate_to_open_by_default_settings() -> void`
+Opens the Android Open by Default settings screen for the application.
+Android only.
+
+- `get_link_url() -> String`
+Returns the full deeplink URL as a string.
+
+- `get_link_scheme() -> String`
+Returns the scheme of the last received deeplink (e.g. https, myapp).
+
+- `get_link_host() -> String`
+Returns the host/domain of the last received deeplink.
+
+- `get_link_path() -> String`
+Returns the path portion of the last received deeplink.
+
+- `clear_data() -> void`
+Clears stored deeplink data inside the plugin.
+
+### <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="16"> Android-only Methods
+
+- `is_domain_associated(a_domain: String) -> bool`
+Returns true if the given domain is correctly associated with the app on the current device.
+Android only. Custom schemes are not supported.
+
+---
+
+<a name="classes"></a>
+
+## <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="20"> Classes
+
+Plugin classes.
+
+### <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="16"> Deeplink
+
+Main node used to declare and configure deeplink associations for your application.
+
+**Responsibilities**:
+
+- Defines which `scheme`, `host`, and optional `path_prefix` should be handled
+- Exports deeplink configuration for Android App Links and iOS Universal Links
+- Connects to the native plugin singleton
+- Emits the `deeplink_received` signal when a matching deeplink is opened
+
+**Typical usage**:
+
+- Add one or more Deeplink nodes to your scene
+- Configure their exported properties
+- Call `initialize()` at startup
+- Listen to `deeplink_received` signal
+
+### <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="16"> DeeplinkUrl
+
+Lightweight wrapper class representing a parsed deeplink URL.
+
+This class is constructed from native platform data and provides structured access to URL components such as:
+
+- `scheme`
+- `user`
+- `password`
+- `host`
+- `port`
+- `path`
+- `path_components`
+- `query`
+- `fragment`
+
+It is emitted as the argument of the deeplink_received signal and can also reconstruct the full URL string.
+
+**Sample usage**:
+
+```
+func _on_deeplink_received(url: DeeplinkUrl) -> void:
+	print(url.get_url())
+	print(url.get_host())
+	print(url.get_path())
+```
+
+---
+
 <a name="export"></a>
 
-## <img src="../addon/icon.png" width="20"> Export
+## <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="20"> Export
 
 Three options:
 
@@ -135,7 +255,9 @@ During iOS export, the plugin searches for `Deeplink` nodes in the scene that is
 
 <a name="platform-specific-notes"></a>
 
-## <img src="../addon/icon.png" width="20"> Platform-Specific Notes
+## <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="20"> Platform-Specific Notes
+
+In addition to adding and enabling the plugin, **platform-level configuration** is also required before deeplinks can work.
 
 ### Android
 - **Build:** [Create custom Android gradle build](https://docs.godotengine.org/en/stable/tutorials/export/android_gradle_build.html).
@@ -157,7 +279,7 @@ During iOS export, the plugin searches for `Deeplink` nodes in the scene that is
 
 <a name="links"></a>
 
-# <img src="../addon/icon.png" width="20"> Links
+# <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="20"> Links
 
 - [AssetLib Entry Android](https://godotengine.org/asset-library/asset/2534)
 - [AssetLib Entry iOS](https://godotengine.org/asset-library/asset/3191)
@@ -166,7 +288,7 @@ During iOS export, the plugin searches for `Deeplink` nodes in the scene that is
 
 <a name="all-plugins"></a>
 
-# <img src="../addon/icon.png" width="24"> All Plugins
+# <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="24"> All Plugins
 
 | Plugin | Android | iOS | Free | Open Source | License |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -175,12 +297,14 @@ During iOS export, the plugin searches for `Deeplink` nodes in the scene that is
 | [Deeplink](https://github.com/godot-sdk-integrations/godot-deeplink) | ✅ | ✅ | ✅ | ✅ | MIT |
 | [Share](https://github.com/godot-sdk-integrations/godot-share) | ✅ | ✅ | ✅ | ✅ | MIT |
 | [In-App Review](https://github.com/godot-sdk-integrations/godot-inapp-review) | ✅ | ✅ | ✅ | ✅ | MIT |
+| [Connection State](https://github.com/godot-sdk-integrations/godot-connection-state) | ✅ | ✅ | ✅ | ✅ | MIT |
+| [OAuth 2.0](https://github.com/godot-sdk-integrations/godot-oauth2) | ✅ | ✅ | ✅ | ✅ | MIT |
 
 ---
 
 <a name="credits"></a>
 
-# <img src="../addon/icon.png" width="24"> Credits
+# <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="24"> Credits
 
 Developed by [Cengiz](https://github.com/cengiz-pz)
 
@@ -192,6 +316,6 @@ Original repository: [Godot Deeplink Plugin](https://github.com/godot-sdk-integr
 
 <a name="contributing"></a>
 
-# <img src="../addon/icon.png" width="24"> Contributing
+# <img src="https://raw.githubusercontent.com/godot-sdk-integrations/godot-deeplink/main/addon/icon.png" width="24"> Contributing
 
-See [our guide](CONTRIBUTING.md) if you would like to contribute to this project.
+See [the contribution guide](https://github.com/godot-sdk-integrations/godot-deeplink?tab=contributing-ov-file) if you would like to contribute to this project.
