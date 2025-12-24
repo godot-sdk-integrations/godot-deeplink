@@ -68,11 +68,12 @@ scroll_following = true
 script = ExtResource("2_4jmv3")
 host = "www.example.com"
 path_prefix = "/mydata"
+android_label = "example"
 
 [node name="TestCustomSchemeDeeplink" type="Node" parent="Deeplink"]
 script = ExtResource("2_4jmv3")
 scheme = "mytest"
-label = "mytest"
+android_label = "customscheme"
 
 [connection signal="pressed" from="CanvasLayer/CenterContainer/VBoxContainer/VBoxContainer/IsAssociatedButton" to="." method="_on_is_associated_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/CenterContainer/VBoxContainer/VBoxContainer/NavigateButton" to="." method="_on_navigate_button_pressed"]
